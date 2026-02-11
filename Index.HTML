@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANTIQ | System Pricing Configurator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --mantiq-blue: #00aeef; /* The vibrant blue from the brand */
+            --mantiq-navy: #101828; /* The deep navy from the brand text */
+            --mantiq-navy-light: #1e293b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f9fafb;
+        }
+
+        .mantiq-navy-bg {
+            background-color: var(--mantiq-navy);
+        }
+
+        .text-mantiq-blue {
+            color: var(--mantiq-blue);
+        }
+
+        .bg-mantiq-blue {
+            background-color: var(--mantiq-blue);
+        }
+
+        .module-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .module-card:hover {
+            border-color: var(--mantiq-blue);
+            background-color: #f0f9ff;
+            transform: translateY(-1px);
+        }
+
+        .module-card.active {
+            border-color: var(--mantiq-blue);
+            background-color: #f0f9ff;
+            box-shadow: 0 0 0 1px var(--mantiq-blue);
+        }
+
+        .btn-mantiq {
+            background-color: var(--mantiq-blue);
+            transition: all 0.2s;
+            color: white;
+        }
+
+        .btn-mantiq:hover {
+            background-color: #0096ce;
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 174, 239, 0.3);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .custom-shadow {
+            box-shadow: 0 20px 25px -5px rgba(16, 24, 40, 0.1), 0 10px 10px -5px rgba(16, 24, 40, 0.04);
+        }
+
+        .logo-text {
+            color: var(--mantiq-navy);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header / Brand Section -->
+        <header class="mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 pb-8">
+            <div class="flex items-center gap-4">
+                <!-- SVG Logo Icon removed as requested -->
+                <h1 class="text-4xl logo-text">MANTIQ</h1>
+            </div>
+            <div class="text-center md:text-right">
+                <h2 class="text-xl font-bold text-slate-800">System Pricing Configurator</h2>
+                <p class="text-slate-500 text-sm font-medium">Strategic Digital Solutions for Modern Business</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Configuration -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- System Selection -->
+                <section class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">1. Core Platform Selection</h2>
+                    </div>
+                    
+                    <select id="systemSelect" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all text-slate-700 font-semibold cursor-pointer appearance-none">
+                        <option value="">-- Choose Your Business System --</option>
+                        <option value="crm">CRM Tracker (Customer Data Management)</option>
+                        <option value="hr">HR Tracker (Human Resource Management)</option>
+                        <option value="finance">Finance Tracker (ERP & Accounting)</option>
+                        <option value="sales">Sales Tracker (Operations & Growth)</option>
+                    </select>
+                </section>
+
+                <!-- Modules Selection -->
+                <section id="modulesSection" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">2. Strategic Modules</h2>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-6 font-medium">Enhance your core system with targeted functionality.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="modulesContainer">
+                        <!-- Modules dynamically injected -->
+                    </div>
+                </section>
+
+                <!-- User Management -->
+                <section class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        </div>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">3. User Seats & Scale</h2>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row md:items-center gap-8">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Enterprise Users</label>
+                            <div class="relative">
+                                <input type="number" id="users" min="0" value="0" class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-extrabold text-2xl">
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+                                    <button onclick="adjustUsers(-1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">-</button>
+                                    <button onclick="adjustUsers(1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 px-6 py-4 rounded-2xl border-l-4 border-mantiq-blue min-w-[160px]">
+                            <span class="text-[10px] text-slate-400 block uppercase tracking-widest font-black mb-1">Standard Rate</span>
+                            <span class="text-white font-extrabold text-xl">200 <small class="text-xs text-sky-400">EGP / Seat</small></span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Summary Card -->
+            <div class="lg:col-span-1">
+                <div class="mantiq-navy-bg text-white p-8 rounded-[2.5rem] sticky top-8 custom-shadow border-t border-slate-800">
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="w-2 h-2 rounded-full bg-mantiq-blue animate-pulse"></span>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Investment Summary</h3>
+                    </div>
+
+                    <div id="summaryItems" class="space-y-4 mb-10 min-h-[120px]">
+                        <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
+                             <p class="text-[10px] uppercase tracking-widest font-bold">Configure options to view quote</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-800 pt-8 mt-8">
+                        <div class="mb-8">
+                            <span class="block text-slate-500 text-[10px] uppercase tracking-[0.3em] font-black mb-2">Estimated Total</span>
+                            <div class="text-5xl font-extrabold text-white">
+                                <span id="totalPrice">0</span>
+                                <span class="text-sm text-mantiq-blue font-bold tracking-widest ml-1">EGP</span>
+                            </div>
+                        </div>
+
+                        <button onclick="copyQuote()" id="copyBtn" class="btn-mantiq w-full py-5 rounded-2xl font-extrabold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            Get Custom Quote
+                        </button>
+                    </div>
+                    
+                    <div id="toast" class="mt-4 text-center text-xs text-sky-400 font-bold uppercase tracking-widest opacity-0 transition-opacity">
+                        Quote Detail Copied
+                    </div>
+                </div>
+                
+                <p class="text-center text-[10px] text-slate-400 mt-6 font-bold uppercase tracking-widest">
+                    &copy; 2024 MANTIQ BUSINESS SERVICES
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+const systems = {
+    crm: {
+        name: "CRM Tracker",
+        fixed: 8000,
+        modules: {
+            "Leads":1500, "Customers":1500, "Contacts":1000, "Deals":2000, 
+            "Pipeline":1000, "Activities":2300, "Follow-ups":1000, 
+            "Notes & Comments":1000, "Communication History":2000, 
+            "Reports":3000, "Chats":5000
+        }
+    },
+    hr: {
+        name: "HR Tracker",
+        fixed: 8000,
+        modules: {
+            "Employees Directory":2000, "Attendance":4000, "Leaves":3000, 
+            "Payroll":7000, "Recruitment":4000, "Performance":3000, 
+            "Training":2000, "Contracts":2000, "Penalties":2000, "Reports":3000
+        }
+    },
+    finance: {
+        name: "Finance Tracker",
+        fixed: 7000,
+        modules: {
+            "Income":1300, "Expenses":1300, "Invoices":3000, "Bills":1800, 
+            "Payments":1200, "Accounts / Wallets":1000, "Cash Flow":4000, 
+            "Budgeting":3000, "Taxes":1200, "P&L":1400, "Financial Reports":5000, 
+            "Export":2000
+        }
+    },
+    sales: {
+        name: "Sales Tracker",
+        fixed: 5000,
+        modules: {
+            "Leads":1500, "Opportunities":2000, "Quotations":1800, "Orders":1500, 
+            "Products":1500, "Pricing":2000, "Pipeline":1200, "Targets":1500, 
+            "Commissions":1200, "Customers":2000, "Reports":3000
+        }
+    }
+};
+
+const USER_UNIT_COST = 200;
+const systemSelect = document.getElementById("systemSelect");
+const modulesContainer = document.getElementById("modulesContainer");
+const modulesSection = document.getElementById("modulesSection");
+const usersInput = document.getElementById("users");
+const totalPriceEl = document.getElementById("totalPrice");
+const summaryItems = document.getElementById("summaryItems");
+
+function init() {
+    systemSelect.addEventListener('change', loadModules);
+    usersInput.addEventListener('input', calculateTotal);
+}
+
+function adjustUsers(delta) {
+    const newVal = Math.max(0, parseInt(usersInput.value || 0) + delta);
+    usersInput.value = newVal;
+    calculateTotal();
+}
+
+function loadModules() {
+    const key = systemSelect.value;
+    modulesContainer.innerHTML = "";
+    
+    if (!key) {
+        modulesSection.classList.add('opacity-40', 'pointer-events-none');
+        summaryItems.innerHTML = `<div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center"><p class="text-[10px] uppercase tracking-widest font-bold">Configure options to view quote</p></div>`;
+        totalPriceEl.innerText = "0";
+        return;
+    }
+
+    modulesSection.classList.remove('opacity-40', 'pointer-events-none');
+    const modules = systems[key].modules;
+
+    for (let modName in modules) {
+        const cost = modules[modName];
+        const card = document.createElement('div');
+        card.className = 'module-card p-5 rounded-2xl cursor-pointer flex items-center justify-between group bg-white';
+        card.innerHTML = `
+            <div class="flex items-center gap-4">
+                <div class="checkbox-ui w-6 h-6 rounded border-2 border-slate-200 bg-white flex items-center justify-center group-hover:border-sky-400 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <span class="text-sm font-bold text-slate-700">${modName}</span>
+            </div>
+            <div class="text-right">
+                <span class="text-xs font-extrabold text-slate-400 group-hover:text-sky-500 transition-colors">${cost.toLocaleString()} <small>EGP</small></span>
+            </div>
+            <input type="checkbox" class="hidden" value="${cost}" data-name="${modName}" onchange="toggleModuleUI(this)">
+        `;
+        
+        card.onclick = () => {
+            const cb = card.querySelector('input');
+            cb.checked = !cb.checked;
+            toggleModuleUI(cb);
+        };
+        
+        modulesContainer.appendChild(card);
+    }
+
+    calculateTotal();
+}
+
+function toggleModuleUI(checkbox) {
+    const card = checkbox.closest('.module-card');
+    const checkIcon = card.querySelector('svg');
+    const checkboxDiv = card.querySelector('.checkbox-ui');
+    
+    if (checkbox.checked) {
+        card.classList.add('active');
+        checkboxDiv.classList.add('bg-mantiq-blue', 'border-mantiq-blue');
+        checkIcon.classList.remove('opacity-0');
+    } else {
+        card.classList.remove('active');
+        checkboxDiv.classList.remove('bg-mantiq-blue', 'border-mantiq-blue');
+        checkIcon.classList.add('opacity-0');
+    }
+    calculateTotal();
+}
+
+function calculateTotal() {
+    const key = systemSelect.value;
+    if (!key) return;
+
+    let total = systems[key].fixed;
+    let html = `
+        <div class="flex justify-between items-start">
+            <div>
+                <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Base Platform</span>
+                <span class="text-slate-100 font-bold text-sm">${systems[key].name}</span>
+            </div>
+            <span class="text-white font-extrabold text-xs">${systems[key].fixed.toLocaleString()} EGP</span>
+        </div>
+    `;
+
+    const checkboxes = document.querySelectorAll("#modulesContainer input[type='checkbox']");
+    checkboxes.forEach(box => {
+        if (box.checked) {
+            const cost = parseInt(box.value);
+            total += cost;
+            html += `
+                <div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3">
+                    <span class="text-slate-400 font-medium">${box.dataset.name}</span>
+                    <span class="text-slate-300 font-bold">${cost.toLocaleString()} EGP</span>
+                </div>
+            `;
+        }
+    });
+
+    const users = parseInt(usersInput.value) || 0;
+    const userCostTotal = users * USER_UNIT_COST;
+    
+    if (users > 0) {
+        total += userCostTotal;
+        html += `
+            <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800">
+                <span class="text-sky-400 font-black uppercase tracking-widest">${users} System User${users > 1 ? 's' : ''}</span>
+                <span class="text-white font-extrabold">${userCostTotal.toLocaleString()} EGP</span>
+            </div>
+        `;
+    }
+
+    summaryItems.innerHTML = html;
+    totalPriceEl.innerText = total.toLocaleString();
+}
+
+function copyQuote() {
+    const key = systemSelect.value;
+    if (!key) return;
+
+    const total = totalPriceEl.innerText;
+    const users = usersInput.value || 0;
+    let selectedModules = [];
+    document.querySelectorAll("#modulesContainer input:checked").forEach(i => selectedModules.push(i.dataset.name));
+
+    const text = `
+MANTIQ BUSINESS SERVICES - CONFIGURATION QUOTE
+===============================================
+Platform: ${systems[key].name} (${systems[key].fixed.toLocaleString()} EGP)
+Selected Modules: ${selectedModules.length > 0 ? selectedModules.join(', ') : 'Base Platform only'}
+User Seats: ${users} License(s) (${(users * USER_UNIT_COST).toLocaleString()} EGP)
+===============================================
+ESTIMATED TOTAL INVESTMENT: ${total} EGP
+Date: ${new Date().toLocaleDateString()}
+===============================================
+    `.trim();
+
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+
+    const toast = document.getElementById('toast');
+    toast.style.opacity = '1';
+    setTimeout(() => toast.style.opacity = '0', 2000);
+}
+
+init();
+</script>
+
+</body>
+</html>
