@@ -169,10 +169,11 @@
         </div>
         <div id="png-summary-content" class="space-y-4 mb-8"></div>
         <div class="border-t border-slate-800 pt-6">
-            <span class="text-slate-500 text-[10px] uppercase font-black tracking-widest block mb-1">Total Investment</span>
+            <span class="text-slate-500 text-[10px] uppercase font-black tracking-widest block mb-1">Total Estimated Investment</span>
             <div class="text-4xl font-extrabold text-white">
                 <span id="png-total">0</span> <span class="text-sm text-sky-400">EGP</span>
             </div>
+            <p id="png-note" class="text-[10px] text-slate-500 mt-2 italic"></p>
         </div>
         <p class="mt-10 text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em]">Strategic Digital Solutions for Modern Business</p>
     </div>
@@ -214,7 +215,7 @@
                     </div>
                 </section>
 
-                <!-- STEP 2: PRODUCT SELECTION (Cascading) -->
+                <!-- STEP 2: PRODUCT SELECTION -->
                 <section id="productSelectionSection" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
@@ -240,17 +241,17 @@
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">3. Strategic Features</h2>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight" id="featuresTitle">3. Strategic Features</h2>
                     </div>
-                    <p class="text-sm text-slate-400 mb-6 font-medium">Select <span class="text-mantiq-blue font-bold">2 or more</span> to finalize the quote.</p>
+                    <p class="text-sm text-slate-400 mb-6 font-medium" id="featuresInstruction">Select <span class="text-mantiq-blue font-bold">2 or more</span> to finalize the quote.</p>
                     
-                    <div class="flex flex-wrap gap-3" id="modulesContainer">
-                        <!-- Module buttons -->
+                    <div id="modulesContainer" class="flex flex-wrap gap-3">
+                        <!-- Module buttons or static list -->
                     </div>
                 </section>
 
-                <!-- STEP 4: USERS -->
-                <section class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <!-- STEP 4: USERS (Hidden for Web/Mobile) -->
+                <section id="userSeatsSection" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -294,10 +295,11 @@
                     <div class="border-t border-slate-800 pt-8 mt-8">
                         <div class="mb-8">
                             <span class="block text-slate-500 text-[10px] uppercase tracking-[0.3em] font-black mb-2">Estimated Total</span>
-                            <div class="text-5xl font-extrabold text-white">
+                            <div class="text-4xl font-extrabold text-white">
                                 <span id="totalPrice">0</span>
                                 <span class="text-sm text-mantiq-blue font-bold tracking-widest ml-1">EGP</span>
                             </div>
+                            <p id="customizationNote" class="hidden text-[9px] text-slate-500 italic mt-3 font-medium uppercase tracking-widest">Note: Prices are based on customizations</p>
                         </div>
 
                         <div class="flex flex-col gap-3">
@@ -327,7 +329,7 @@
 
 <script>
 /**
- * Master Product Database
+ * Master Product Database with ranges for non-system products
  */
 const productData = {
     "Business Systems": {
@@ -337,64 +339,64 @@ const productData = {
         "sales": { name: "Sales Tracker", fixed: 5000, modules: { "Leads":1500, "Opportunities":2000, "Quotations":1800, "Orders":1500, "Products":1500, "Pricing":2000, "Pipeline":1200, "Targets":1500, "Commissions":1200, "Customers":2000, "Reports":3000 } }
     },
     "Company Portfolio (Web)": {
-        "web_starter": { name: "Starter Package", fixed: 10000, modules: { "Up to 5 Pages":0, "Responsive Layout":0, "Contact Form":0, "Basic SEO":0 } },
-        "web_growth": { name: "Growth Package", fixed: 20000, modules: { "Up to 10 Pages":0, "Blog/CMS":0, "2 Languages":0, "Social Media Feed":0 } },
-        "web_corporate": { name: "Corporate Package", fixed: 40000, modules: { "Unlimited Pages":0, "Advanced UI/UX":0, "CRM Integrations":0, "Automations":0 } }
+        "web_starter": { name: "Starter Package", fixed: "10,000 – 15,000", modules: { "Up to 5 Pages":0, "Responsive Layout":0, "Contact Form":0, "Basic SEO":0 } },
+        "web_growth": { name: "Growth Package", fixed: "20,000 – 30,000", modules: { "Up to 10 Pages":0, "Blog/CMS":0, "2 Languages":0, "Social Media Feed":0 } },
+        "web_corporate": { name: "Corporate Package", fixed: "40,000 – 60,000+", modules: { "Unlimited Pages":0, "Advanced UI/UX":0, "CRM Integrations":0, "Automations":0 } }
     },
     "E-Commerce (Web)": {
-        "shop_basic": { name: "Basic Shop", fixed: 30000, modules: { "Up to 50 Products":0, "Secure Checkout":0, "Payment Gateway":0, "Inventory Sync":0 } },
-        "shop_adv": { name: "Advanced Shop", fixed: 50000, modules: { "Up to 300 Products":0, "Smart Coupons":0, "Shipping Rules":0, "Sales Dashboard":0 } },
-        "shop_ent": { name: "Enterprise Shop", fixed: 80000, modules: { "Unlimited Products":0, "Multi-currency":0, "WMS Integration":0, "High-Load Optimization":0 } }
+        "shop_basic": { name: "Basic Shop", fixed: "30,000 – 40,000", modules: { "Up to 50 Products":0, "Secure Checkout":0, "Payment Gateway":0, "Inventory Sync":0 } },
+        "shop_adv": { name: "Advanced Shop", fixed: "50,000 – 70,000", modules: { "Up to 300 Products":0, "Smart Coupons":0, "Shipping Rules":0, "Sales Dashboard":0 } },
+        "shop_ent": { name: "Enterprise Shop", fixed: "80,000 – 120,000+", modules: { "Unlimited Products":0, "Multi-currency":0, "WMS Integration":0, "High-Load Optimization":0 } }
     },
     "Business App (Mobile)": {
-        "app_bus_basic": { name: "Basic App", fixed: 40000, modules: { "Core Info Pages":0, "Services Module":0, "WhatsApp Sync":0, "Contact Gateway":0, "Team Directory":0, "Testimonials Section":0 } },
-        "app_bus_adv": { name: "Advanced App", fixed: 80000, modules: { "Auth System":0, "Role Access":0, "Notifications":0, "Admin Control":0, "Internal Chat":0, "Google Maps API":0 } },
-        "app_bus_super": { name: "Super App", fixed: 120000, modules: { "Full Dashboard":0, "Advanced Analytics":0, "Multi-role Support":0, "Vendor Module":0, "Global Broadcast":0, "File Sharing":0 } }
+        "app_bus_basic": { name: "Basic App", fixed: "40,000 – 60,000", modules: { "Core Info Pages":0, "Services Module":0, "WhatsApp Sync":0, "Contact Gateway":0, "Team Directory":0, "Testimonials Section":0 } },
+        "app_bus_adv": { name: "Advanced App", fixed: "80,000 – 110,000", modules: { "Auth System":0, "Role Access":0, "Notifications":0, "Admin Control":0, "Internal Chat":0, "Google Maps API":0 } },
+        "app_bus_super": { name: "Super App", fixed: "120,000 – 180,000+", modules: { "Full Dashboard":0, "Advanced Analytics":0, "Multi-role Support":0, "Vendor Module":0, "Global Broadcast":0, "File Sharing":0 } }
     },
     "E-Commerce App (Mobile)": {
-        "app_shop_basic": { name: "Basic Shop App", fixed: 70000, modules: { "Product Sync":0, "Cart Management":0, "Checkout Flow":0, "Order History":0 } },
-        "app_shop_adv": { name: "Advanced Shop App", fixed: 100000, modules: { "Smart Filters":0, "Wishlist System":0, "Analytics Engine":0, "Account Profiles":0 } },
-        "app_shop_super": { name: "Super App (Multi-vendor)", fixed: 180000, modules: { "Multi-vendor Dashboard":0, "Logistics API":0, "Marketing Hub":0, "Premium Loyalty":0 } }
+        "app_shop_basic": { name: "Basic Shop App", fixed: "70,000 – 90,000", modules: { "Product Sync":0, "Cart Management":0, "Checkout Flow":0, "Order History":0 } },
+        "app_shop_adv": { name: "Advanced Shop App", fixed: "100,000 – 150,000", modules: { "Smart Filters":0, "Wishlist System":0, "Analytics Engine":0, "Account Profiles":0 } },
+        "app_shop_super": { name: "Super App (Multi-vendor)", fixed: "180,000 – 300,000+", modules: { "Multi-vendor Dashboard":0, "Logistics API":0, "Marketing Hub":0, "Premium Loyalty":0 } }
     }
 };
 
 let activeService = null;
 let activeProduct = null;
 
-// Elements
-const serviceTrigger = document.getElementById("serviceTrigger");
-const serviceOptionsList = document.getElementById("serviceOptionsList");
-const serviceDropdown = document.getElementById("serviceDropdown");
-const selectedServiceLabel = document.getElementById("selectedServiceLabel");
-
-const productTrigger = document.getElementById("productTrigger");
-const productOptionsList = document.getElementById("productOptionsList");
-const productDropdown = document.getElementById("productDropdown");
-const productSelectionSection = document.getElementById("productSelectionSection");
-const selectedProductLabel = document.getElementById("selectedProductLabel");
-
-const modulesContainer = document.getElementById("modulesContainer");
-const modulesSection = document.getElementById("modulesSection");
-const usersInput = document.getElementById("users");
-const totalPriceEl = document.getElementById("totalPrice");
-const summaryItems = document.getElementById("summaryItems");
+const elements = {
+    serviceTrigger: document.getElementById("serviceTrigger"),
+    serviceOptionsList: document.getElementById("serviceOptionsList"),
+    serviceDropdown: document.getElementById("serviceDropdown"),
+    selectedServiceLabel: document.getElementById("selectedServiceLabel"),
+    productTrigger: document.getElementById("productTrigger"),
+    productOptionsList: document.getElementById("productOptionsList"),
+    productDropdown: document.getElementById("productDropdown"),
+    productSelectionSection: document.getElementById("productSelectionSection"),
+    selectedProductLabel: document.getElementById("selectedProductLabel"),
+    modulesContainer: document.getElementById("modulesContainer"),
+    modulesSection: document.getElementById("modulesSection"),
+    usersInput: document.getElementById("users"),
+    totalPriceEl: document.getElementById("totalPrice"),
+    summaryItems: document.getElementById("summaryItems"),
+    userSeatsSection: document.getElementById("userSeatsSection"),
+    featuresTitle: document.getElementById("featuresTitle"),
+    featuresInstruction: document.getElementById("featuresInstruction"),
+    customizationNote: document.getElementById("customizationNote")
+};
 
 function init() {
     renderServices();
-
-    serviceTrigger.addEventListener('click', () => serviceDropdown.classList.toggle('open'));
-    productTrigger.addEventListener('click', () => productDropdown.classList.toggle('open'));
-
+    elements.serviceTrigger.addEventListener('click', () => elements.serviceDropdown.classList.toggle('open'));
+    elements.productTrigger.addEventListener('click', () => elements.productDropdown.classList.toggle('open'));
     document.addEventListener('click', (e) => {
-        if (!serviceDropdown.contains(e.target)) serviceDropdown.classList.remove('open');
-        if (!productDropdown.contains(e.target)) productDropdown.classList.remove('open');
+        if (!elements.serviceDropdown.contains(e.target)) elements.serviceDropdown.classList.remove('open');
+        if (!elements.productDropdown.contains(e.target)) elements.productDropdown.classList.remove('open');
     });
-
-    if (usersInput) usersInput.addEventListener('input', calculateTotal);
+    if (elements.usersInput) elements.usersInput.addEventListener('input', calculateTotal);
 }
 
 function renderServices() {
-    serviceOptionsList.innerHTML = Object.keys(productData).map(cat => `
+    elements.serviceOptionsList.innerHTML = Object.keys(productData).map(cat => `
         <div class="custom-option" onclick="selectService('${cat}')">${cat}</div>
     `).join('');
 }
@@ -402,26 +404,34 @@ function renderServices() {
 window.selectService = function(cat) {
     activeService = cat;
     activeProduct = null;
+    elements.selectedServiceLabel.innerText = cat;
+    elements.selectedServiceLabel.classList.replace('text-slate-400', 'text-slate-800');
+    elements.productSelectionSection.classList.remove('opacity-40', 'pointer-events-none');
+    elements.selectedProductLabel.innerText = "-- Choose Product --";
+    elements.selectedProductLabel.classList.replace('text-slate-800', 'text-slate-400');
+    elements.modulesSection.classList.add('opacity-40', 'pointer-events-none');
+    elements.modulesContainer.innerHTML = "";
     
-    selectedServiceLabel.innerText = cat;
-    selectedServiceLabel.classList.replace('text-slate-400', 'text-slate-800');
-    
-    // Reset product level
-    productSelectionSection.classList.remove('opacity-40', 'pointer-events-none');
-    selectedProductLabel.innerText = "-- Choose Product --";
-    selectedProductLabel.classList.replace('text-slate-800', 'text-slate-400');
-    
-    // Reset features level
-    modulesSection.classList.add('opacity-40', 'pointer-events-none');
-    modulesContainer.innerHTML = "";
-    
+    // Toggle users section and customization note
+    if (cat === "Business Systems") {
+        elements.userSeatsSection.classList.remove('hidden');
+        elements.customizationNote.classList.add('hidden');
+        elements.featuresTitle.innerText = "3. Strategic Features";
+        elements.featuresInstruction.innerHTML = 'Select <span class="text-mantiq-blue font-bold">2 or more</span> to finalize the quote.';
+    } else {
+        elements.userSeatsSection.classList.add('hidden');
+        elements.customizationNote.classList.remove('hidden');
+        elements.featuresTitle.innerText = "3. Included Package Features";
+        elements.featuresInstruction.innerText = "Review the standard features included in this tier.";
+    }
+
     renderProducts(cat);
-    serviceDropdown.classList.remove('open');
+    elements.serviceDropdown.classList.remove('open');
     calculateTotal();
 };
 
 function renderProducts(cat) {
-    productOptionsList.innerHTML = Object.keys(productData[cat]).map(key => `
+    elements.productOptionsList.innerHTML = Object.keys(productData[cat]).map(key => `
         <div class="custom-option" onclick="selectProduct('${cat}', '${key}')">
             <div class="font-bold text-slate-800 text-sm">${productData[cat][key].name}</div>
         </div>
@@ -430,111 +440,112 @@ function renderProducts(cat) {
 
 window.selectProduct = function(cat, key) {
     activeProduct = key;
-    
-    selectedProductLabel.innerText = productData[cat][key].name;
-    selectedProductLabel.classList.replace('text-slate-400', 'text-slate-800');
-    
-    productDropdown.classList.remove('open');
+    elements.selectedProductLabel.innerText = productData[cat][key].name;
+    elements.selectedProductLabel.classList.replace('text-slate-400', 'text-slate-800');
+    elements.productDropdown.classList.remove('open');
     loadModules(cat, key);
 };
 
 function loadModules(cat, key) {
-    modulesSection.classList.remove('opacity-40', 'pointer-events-none');
-    modulesContainer.innerHTML = "";
+    elements.modulesSection.classList.remove('opacity-40', 'pointer-events-none');
+    elements.modulesContainer.innerHTML = "";
     
     const modules = productData[cat][key].modules;
     for (let modName in modules) {
         const cost = modules[modName];
-        const btn = document.createElement('button');
-        btn.className = 'module-btn px-6 py-3 rounded-full text-sm font-semibold';
-        btn.innerText = modName;
-        btn.dataset.cost = cost;
-        btn.dataset.name = modName;
-        btn.dataset.active = "false";
-        
-        btn.onclick = () => {
-            const isActive = btn.dataset.active === "true";
-            btn.dataset.active = (!isActive).toString();
-            btn.classList.toggle('active');
-            calculateTotal();
-        };
-        modulesContainer.appendChild(btn);
+        if (cat === "Business Systems") {
+            const btn = document.createElement('button');
+            btn.className = 'module-btn px-6 py-3 rounded-full text-sm font-semibold';
+            btn.innerText = modName;
+            btn.dataset.cost = cost;
+            btn.dataset.name = modName;
+            btn.dataset.active = "false";
+            btn.onclick = () => {
+                const isActive = btn.dataset.active === "true";
+                btn.dataset.active = (!isActive).toString();
+                btn.classList.toggle('active');
+                calculateTotal();
+            };
+            elements.modulesContainer.appendChild(btn);
+        } else {
+            // Static display for Web/Mobile
+            const chip = document.createElement('div');
+            chip.className = 'px-4 py-2 rounded-lg bg-sky-50 text-mantiq-blue text-xs font-bold border border-sky-100 flex items-center gap-2';
+            chip.innerHTML = `<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>${modName}`;
+            elements.modulesContainer.appendChild(chip);
+        }
     }
     calculateTotal();
 }
 
 window.adjustUsers = function(delta) {
-    const newVal = Math.max(1, (parseInt(usersInput.value) || 1) + delta);
-    usersInput.value = newVal;
+    elements.usersInput.value = Math.max(1, (parseInt(elements.usersInput.value) || 1) + delta);
     calculateTotal();
 };
 
 function calculateTotal() {
     if (!activeService || !activeProduct) {
-        summaryItems.innerHTML = `<div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center"><p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Choose service and product</p></div>`;
-        totalPriceEl.innerText = "0";
+        elements.summaryItems.innerHTML = `<div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center"><p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Choose service and product</p></div>`;
+        elements.totalPriceEl.innerText = "0";
         return;
     }
 
     const prod = productData[activeService][activeProduct];
-    const users = Math.max(1, parseInt(usersInput.value) || 1);
-    let total = prod.fixed;
+    let totalHtml = "";
     
-    let html = `
-        <div class="flex justify-between items-start mb-4">
-            <div>
-                <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Base Price</span>
-                <span class="text-slate-100 font-bold text-sm">${prod.name}</span>
+    if (activeService === "Business Systems") {
+        const users = Math.max(1, parseInt(elements.usersInput.value) || 1);
+        let numericTotal = prod.fixed;
+        let featHtml = "";
+        let selectedCount = 0;
+        
+        document.querySelectorAll(".module-btn").forEach(btn => {
+            if (btn.dataset.active === "true") {
+                selectedCount++;
+                const cost = parseInt(btn.dataset.cost);
+                numericTotal += cost;
+                featHtml += `<div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3 mb-2"><span class="text-slate-400 font-medium">${btn.dataset.name}</span><span class="text-slate-300 font-bold">${cost.toLocaleString()} EGP</span></div>`;
+            }
+        });
+
+        const userCostTotal = users * 200;
+        numericTotal += userCostTotal;
+        elements.totalPriceEl.innerText = numericTotal.toLocaleString();
+        
+        totalHtml = `
+            <div class="flex justify-between items-start mb-4"><div><span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Base Price</span><span class="text-slate-100 font-bold text-sm">${prod.name}</span></div><span class="text-white font-extrabold text-xs">${prod.fixed.toLocaleString()} EGP</span></div>
+            ${featHtml}
+            <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800 mt-4"><span class="text-sky-400 font-black uppercase tracking-widest">${users} User Seat(s)</span><span class="text-white font-extrabold">${userCostTotal.toLocaleString()} EGP</span></div>
+        `;
+        
+        if (selectedCount < 2) totalHtml += `<p class="mt-3 text-[9px] text-red-400 font-black uppercase tracking-widest italic animate-pulse text-center">Select 2+ features</p>`;
+    } else {
+        // Web/Mobile Display
+        elements.totalPriceEl.innerText = prod.fixed;
+        const featuresList = Object.keys(prod.modules).map(m => `<li class="text-slate-400 text-[11px] list-disc ml-4">${m}</li>`).join("");
+        totalHtml = `
+            <div class="space-y-4">
+                <div><span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Service Tier</span><span class="text-slate-100 font-bold text-sm">${prod.name}</span></div>
+                <div class="py-3 border-y border-slate-800"><span class="text-[9px] text-slate-500 uppercase font-black tracking-widest block mb-2">Package Includes</span><ul class="space-y-1">${featuresList}</ul></div>
             </div>
-            <span class="text-white font-extrabold text-xs">${prod.fixed.toLocaleString()} EGP</span>
-        </div>
-    `;
-
-    let selectedCount = 0;
-    document.querySelectorAll(".module-btn").forEach(btn => {
-        if (btn.dataset.active === "true") {
-            selectedCount++;
-            const cost = parseInt(btn.dataset.cost);
-            total += cost;
-            html += `
-                <div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3 mb-2">
-                    <span class="text-slate-400 font-medium">${btn.dataset.name}</span>
-                    <span class="text-slate-300 font-bold">${cost > 0 ? cost.toLocaleString() + ' EGP' : 'Included'}</span>
-                </div>
-            `;
-        }
-    });
-
-    const userCostTotal = users * 200;
-    total += userCostTotal;
-    
-    html += `
-        <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800 mt-4">
-            <span class="text-sky-400 font-black uppercase tracking-widest">${users} User Seat(s)</span>
-            <span class="text-white font-extrabold">${userCostTotal.toLocaleString()} EGP</span>
-        </div>
-    `;
-
-    if (selectedCount < 2) {
-        html += `<p class="mt-3 text-[9px] text-red-400 font-black uppercase tracking-widest italic animate-pulse text-center">Select 2+ features</p>`;
+        `;
     }
 
-    summaryItems.innerHTML = html;
-    totalPriceEl.innerText = total.toLocaleString();
+    elements.summaryItems.innerHTML = totalHtml;
 }
 
 function getQuoteData() {
     if (!activeService || !activeProduct) return null;
-    const users = Math.max(1, parseInt(usersInput.value) || 1);
+    const users = activeService === "Business Systems" ? parseInt(elements.usersInput.value) : null;
     const activeFeat = Array.from(document.querySelectorAll(".module-btn")).filter(b => b.dataset.active === "true");
 
-    if (activeFeat.length < 2) return null;
+    if (activeService === "Business Systems" && activeFeat.length < 2) return null;
 
     return {
         service: activeService,
         productName: productData[activeService][activeProduct].name,
-        total: totalPriceEl.innerText,
-        features: activeFeat.map(f => f.dataset.name),
+        total: elements.totalPriceEl.innerText,
+        features: activeService === "Business Systems" ? activeFeat.map(f => f.dataset.name) : Object.keys(productData[activeService][activeProduct].modules),
         users
     };
 }
@@ -547,9 +558,10 @@ MANTIQ BUSINESS SERVICES
 =========================
 Service: ${data.service}
 Product: ${data.productName}
-Users: ${data.users}
+${data.users ? 'Users: ' + data.users : ''}
 Features: ${data.features.join(', ')}
-TOTAL: ${data.total} EGP
+TOTAL ESTIMATED: ${data.total} EGP
+${data.service !== "Business Systems" ? "* Prices are based on customizations" : ""}
 =========================
     `.trim();
     const textarea = document.createElement('textarea');
@@ -558,9 +570,9 @@ TOTAL: ${data.total} EGP
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    const toast = document.getElementById('toast');
-    toast.style.opacity = '1';
-    setTimeout(() => toast.style.opacity = '0', 2000);
+    elements.toast = document.getElementById('toast');
+    elements.toast.style.opacity = '1';
+    setTimeout(() => elements.toast.style.opacity = '0', 2000);
 };
 
 window.downloadQuoteAsPNG = function() {
@@ -568,7 +580,8 @@ window.downloadQuoteAsPNG = function() {
     if (!data) return;
     document.getElementById('png-date').innerText = "Date: " + new Date().toLocaleDateString();
     document.getElementById('png-total').innerText = data.total;
-    document.getElementById('png-summary-content').innerHTML = summaryItems.innerHTML.replace(/<p.*finalize.*<\/p>/i, "");
+    document.getElementById('png-summary-content').innerHTML = elements.summaryItems.innerHTML.replace(/<p.*finalize.*<\/p>/i, "");
+    document.getElementById('png-note').innerText = (data.service !== "Business Systems") ? "* Note: Prices are based on customizations" : "";
     
     const template = document.getElementById('png-capture-template');
     html2canvas(template, { backgroundColor: '#101828', scale: 2, useCORS: true }).then(canvas => {
@@ -581,6 +594,5 @@ window.downloadQuoteAsPNG = function() {
 
 init();
 </script>
-
 </body>
 </html>
