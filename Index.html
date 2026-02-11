@@ -9,8 +9,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
         :root {
-            --mantiq-blue: #00aeef; /* The vibrant blue from the brand */
-            --mantiq-navy: #101828; /* The deep navy from the brand text */
+            --mantiq-blue: #00aeef;
+            --mantiq-navy: #101828;
             --mantiq-navy-light: #1e293b;
         }
 
@@ -83,7 +83,6 @@
         <!-- Header / Brand Section -->
         <header class="mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 pb-8">
             <div class="flex items-center gap-4">
-                <!-- SVG Logo Icon removed as requested -->
                 <h1 class="text-4xl logo-text">MANTIQ</h1>
             </div>
             <div class="text-center md:text-right">
@@ -168,7 +167,7 @@
 
                     <div id="summaryItems" class="space-y-4 mb-10 min-h-[120px]">
                         <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
-                             <p class="text-[10px] uppercase tracking-widest font-bold">Configure options to view quote</p>
+                             <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Configure options to view quote</p>
                         </div>
                     </div>
 
@@ -203,6 +202,9 @@
     </div>
 
 <script>
+/**
+ * Core pricing data for MANTIQ Business Services
+ */
 const systems = {
     crm: {
         name: "CRM Tracker",
@@ -245,31 +247,47 @@ const systems = {
 };
 
 const USER_UNIT_COST = 200;
-const systemSelect = document.getElementById("systemSelect");
-const modulesContainer = document.getElementById("modulesContainer");
-const modulesSection = document.getElementById("modulesSection");
-const usersInput = document.getElementById("users");
-const totalPriceEl = document.getElementById("totalPrice");
-const summaryItems = document.getElementById("summaryItems");
 
+// Globally accessible elements
+let systemSelect, modulesContainer, modulesSection, usersInput, totalPriceEl, summaryItems;
+
+/**
+ * Initialize DOM listeners and references
+ */
 function init() {
-    systemSelect.addEventListener('change', loadModules);
-    usersInput.addEventListener('input', calculateTotal);
+    systemSelect = document.getElementById("systemSelect");
+    modulesContainer = document.getElementById("modulesContainer");
+    modulesSection = document.getElementById("modulesSection");
+    usersInput = document.getElementById("users");
+    totalPriceEl = document.getElementById("totalPrice");
+    summaryItems = document.getElementById("summaryItems");
+
+    if (systemSelect) systemSelect.addEventListener('change', loadModules);
+    if (usersInput) usersInput.addEventListener('input', calculateTotal);
 }
 
-function adjustUsers(delta) {
+/**
+ * UI helper to increment/decrement user count
+ */
+window.adjustUsers = function(delta) {
     const newVal = Math.max(0, parseInt(usersInput.value || 0) + delta);
     usersInput.value = newVal;
     calculateTotal();
-}
+};
 
+/**
+ * Loads available modules based on core system selection
+ */
 function loadModules() {
     const key = systemSelect.value;
     modulesContainer.innerHTML = "";
     
     if (!key) {
         modulesSection.classList.add('opacity-40', 'pointer-events-none');
-        summaryItems.innerHTML = `<div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center"><p class="text-[10px] uppercase tracking-widest font-bold">Configure options to view quote</p></div>`;
+        summaryItems.innerHTML = `
+            <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
+                <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Configure options to view quote</p>
+            </div>`;
         totalPriceEl.innerText = "0";
         return;
     }
@@ -293,7 +311,7 @@ function loadModules() {
             <div class="text-right">
                 <span class="text-xs font-extrabold text-slate-400 group-hover:text-sky-500 transition-colors">${cost.toLocaleString()} <small>EGP</small></span>
             </div>
-            <input type="checkbox" class="hidden" value="${cost}" data-name="${modName}" onchange="toggleModuleUI(this)">
+            <input type="checkbox" class="hidden" value="${cost}" data-name="${modName}">
         `;
         
         card.onclick = () => {
@@ -308,6 +326,9 @@ function loadModules() {
     calculateTotal();
 }
 
+/**
+ * Handles visual state of module checkboxes
+ */
 function toggleModuleUI(checkbox) {
     const card = checkbox.closest('.module-card');
     const checkIcon = card.querySelector('svg');
@@ -325,13 +346,16 @@ function toggleModuleUI(checkbox) {
     calculateTotal();
 }
 
+/**
+ * Calculates investment total and updates summary UI
+ */
 function calculateTotal() {
     const key = systemSelect.value;
     if (!key) return;
 
     let total = systems[key].fixed;
     let html = `
-        <div class="flex justify-between items-start">
+        <div class="flex justify-between items-start mb-4">
             <div>
                 <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Base Platform</span>
                 <span class="text-slate-100 font-bold text-sm">${systems[key].name}</span>
@@ -346,7 +370,7 @@ function calculateTotal() {
             const cost = parseInt(box.value);
             total += cost;
             html += `
-                <div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3">
+                <div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3 mb-2">
                     <span class="text-slate-400 font-medium">${box.dataset.name}</span>
                     <span class="text-slate-300 font-bold">${cost.toLocaleString()} EGP</span>
                 </div>
@@ -360,7 +384,7 @@ function calculateTotal() {
     if (users > 0) {
         total += userCostTotal;
         html += `
-            <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800">
+            <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800 mt-4">
                 <span class="text-sky-400 font-black uppercase tracking-widest">${users} System User${users > 1 ? 's' : ''}</span>
                 <span class="text-white font-extrabold">${userCostTotal.toLocaleString()} EGP</span>
             </div>
@@ -371,7 +395,10 @@ function calculateTotal() {
     totalPriceEl.innerText = total.toLocaleString();
 }
 
-function copyQuote() {
+/**
+ * Copies configuration details to system clipboard
+ */
+window.copyQuote = function() {
     const key = systemSelect.value;
     if (!key) return;
 
@@ -396,15 +423,21 @@ Date: ${new Date().toLocaleDateString()}
     textarea.value = text;
     document.body.appendChild(textarea);
     textarea.select();
-    document.execCommand('copy');
+    try {
+        document.execCommand('copy');
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 2000);
+        }
+    } catch (err) {
+        console.error('Copy failed', err);
+    }
     document.body.removeChild(textarea);
+};
 
-    const toast = document.getElementById('toast');
-    toast.style.opacity = '1';
-    setTimeout(() => toast.style.opacity = '0', 2000);
-}
-
-init();
+// Start application when DOM is ready
+document.addEventListener('DOMContentLoaded', init);
 </script>
 
 </body>
