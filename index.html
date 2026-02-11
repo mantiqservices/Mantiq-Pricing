@@ -6,6 +6,8 @@
     <title>MANTIQ | System Pricing Configurator</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas for PNG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
@@ -91,22 +93,25 @@
             background: #f0f9ff;
         }
 
-        /* Module Card Styles */
-        .module-card {
+        /* Module Button Styles */
+        .module-btn {
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #e5e7eb;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            color: #64748b;
         }
 
-        .module-card:hover {
+        .module-btn:hover {
             border-color: var(--mantiq-blue);
+            color: var(--mantiq-blue);
             background-color: #f0f9ff;
-            transform: translateY(-1px);
         }
 
-        .module-card.active {
+        .module-btn.active {
+            background-color: var(--mantiq-blue);
             border-color: var(--mantiq-blue);
-            background-color: #f0f9ff;
-            box-shadow: 0 0 0 1px var(--mantiq-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 174, 239, 0.2);
         }
 
         .btn-mantiq {
@@ -136,9 +141,40 @@
             font-weight: 800;
             letter-spacing: -0.02em;
         }
+
+        /* PNG Capture Area Wrapper (Hidden from view but used for snapshot) */
+        #png-capture-template {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 600px;
+            padding: 40px;
+            background-color: #101828;
+            color: white;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen">
+
+    <!-- Hidden Template for PNG Generation -->
+    <div id="png-capture-template" class="rounded-[2.5rem] border border-slate-800">
+        <div class="flex items-center gap-4 mb-8">
+             <div class="w-10 h-10 rounded-full bg-sky-500 flex items-center justify-center text-white font-black">M</div>
+             <h1 class="text-3xl font-extrabold tracking-tighter text-white">MANTIQ</h1>
+        </div>
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-sky-400">Official System Quote</h2>
+            <p class="text-slate-400 text-xs mt-1" id="png-date"></p>
+        </div>
+        <div id="png-summary-content" class="space-y-4 mb-8"></div>
+        <div class="border-t border-slate-800 pt-6">
+            <span class="text-slate-500 text-[10px] uppercase font-black tracking-widest block mb-1">Total Investment</span>
+            <div class="text-4xl font-extrabold text-white">
+                <span id="png-total">0</span> <span class="text-sm text-sky-400">EGP</span>
+            </div>
+        </div>
+        <p class="mt-10 text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em]">Strategic Digital Solutions for Modern Business</p>
+    </div>
 
     <div class="max-w-6xl mx-auto">
         <!-- Header / Brand Section -->
@@ -204,10 +240,10 @@
                         </div>
                         <h2 class="text-lg font-bold text-slate-800 tracking-tight">2. Strategic Modules</h2>
                     </div>
-                    <p class="text-sm text-slate-400 mb-6 font-medium">Enhance your core system with targeted functionality.</p>
+                    <p class="text-sm text-slate-400 mb-6 font-medium">Click to select <span class="text-mantiq-blue font-bold">2 or more</span> features.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="modulesContainer">
-                        <!-- Modules dynamically injected -->
+                    <div class="flex flex-wrap gap-3" id="modulesContainer">
+                        <!-- Module buttons injected here -->
                     </div>
                 </section>
 
@@ -217,14 +253,15 @@
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 tracking-tight text-mantiq-blue">3. User Seats (Required to Start)</h2>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight text-mantiq-blue">3. User Seats</h2>
                     </div>
                     
                     <div class="flex flex-col md:flex-row md:items-center gap-8">
                         <div class="flex-1">
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Enterprise Users</label>
                             <div class="relative">
-                                <input type="number" id="users" min="0" value="0" class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-extrabold text-2xl" placeholder="0">
+                                <!-- Default value set to 1, minimum set to 1 -->
+                                <input type="number" id="users" min="1" value="1" class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-extrabold text-2xl" placeholder="1">
                                 <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
                                     <button onclick="adjustUsers(-1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">-</button>
                                     <button onclick="adjustUsers(1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">+</button>
@@ -241,7 +278,7 @@
 
             <!-- Right Column: Summary Card -->
             <div class="lg:col-span-1">
-                <div class="mantiq-navy-bg text-white p-8 rounded-[2.5rem] sticky top-8 custom-shadow border-t border-slate-800">
+                <div id="main-summary-card" class="mantiq-navy-bg text-white p-8 rounded-[2.5rem] sticky top-8 custom-shadow border-t border-slate-800">
                     <div class="flex items-center gap-3 mb-8">
                         <span class="w-2 h-2 rounded-full bg-mantiq-blue animate-pulse"></span>
                         <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Investment Summary</h3>
@@ -249,7 +286,7 @@
 
                     <div id="summaryItems" class="space-y-4 mb-10 min-h-[120px]">
                         <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
-                             <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Add users to initiate quote</p>
+                             <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Select a core platform to view quote</p>
                         </div>
                     </div>
 
@@ -262,12 +299,20 @@
                             </div>
                         </div>
 
-                        <button onclick="copyQuote()" id="copyBtn" class="btn-mantiq w-full py-5 rounded-2xl font-extrabold text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                            </svg>
-                            Get Custom Quote
-                        </button>
+                        <div class="flex flex-col gap-3">
+                            <button onclick="copyQuote()" id="copyBtn" class="btn-mantiq w-full py-4 rounded-2xl font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                </svg>
+                                Copy Details
+                            </button>
+                            <button onclick="downloadQuoteAsPNG()" id="downloadBtn" class="bg-slate-800 hover:bg-slate-700 text-white w-full py-4 rounded-2xl font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-3 border border-slate-700 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download Image
+                            </button>
+                        </div>
                     </div>
                     
                     <div id="toast" class="mt-4 text-center text-xs text-sky-400 font-bold uppercase tracking-widest opacity-0 transition-opacity">
@@ -383,16 +428,17 @@ function init() {
 
 /**
  * UI helper to increment/decrement user count
+ * Modified to ensure a minimum of 1 user.
  */
 window.adjustUsers = function(delta) {
     if (!usersInput) return;
-    const newVal = Math.max(0, parseInt(usersInput.value || 0) + delta);
+    const newVal = Math.max(1, parseInt(usersInput.value || 1) + delta);
     usersInput.value = newVal;
     calculateTotal();
 };
 
 /**
- * Loads available modules based on core system selection
+ * Loads available modules as buttons (unselected by default)
  */
 function loadModules() {
     const key = systemSelect.value;
@@ -410,27 +456,26 @@ function loadModules() {
 
     for (let modName in modules) {
         const cost = modules[modName];
-        const card = document.createElement('div');
-        card.className = 'module-card p-5 rounded-2xl cursor-pointer flex items-center justify-between group bg-white';
-        card.innerHTML = `
-            <div class="flex items-center gap-4">
-                <div class="checkbox-ui w-6 h-6 rounded border-2 border-slate-200 bg-white flex items-center justify-center group-hover:border-sky-400 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white opacity-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </div>
-                <span class="text-sm font-bold text-slate-700">${modName}</span>
-            </div>
-            <input type="checkbox" class="hidden" value="${cost}" data-name="${modName}">
-        `;
+        const btn = document.createElement('button');
+        btn.className = 'module-btn px-6 py-3 rounded-full text-sm font-semibold';
+        btn.innerText = modName;
+        btn.dataset.cost = cost;
+        btn.dataset.name = modName;
+        btn.dataset.active = "false"; // Unselected by default
         
-        card.onclick = () => {
-            const cb = card.querySelector('input');
-            cb.checked = !cb.checked;
-            toggleModuleUI(cb);
+        btn.onclick = () => {
+            const isActive = btn.dataset.active === "true";
+            btn.dataset.active = (!isActive).toString();
+            
+            if (!isActive) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+            calculateTotal();
         };
         
-        modulesContainer.appendChild(card);
+        modulesContainer.appendChild(btn);
     }
 
     calculateTotal();
@@ -439,49 +484,19 @@ function loadModules() {
 function updateEmptySummary() {
     summaryItems.innerHTML = `
         <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
-            <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Configure options to view quote</p>
+            <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Select a core platform to view quote</p>
         </div>`;
 }
 
 /**
- * Handles visual state of module checkboxes
- */
-function toggleModuleUI(checkbox) {
-    const card = checkbox.closest('.module-card');
-    const checkIcon = card.querySelector('svg');
-    const checkboxDiv = card.querySelector('.checkbox-ui');
-    
-    if (checkbox.checked) {
-        card.classList.add('active');
-        checkboxDiv.classList.add('bg-mantiq-blue', 'border-mantiq-blue');
-        checkIcon.classList.remove('opacity-0');
-    } else {
-        card.classList.remove('active');
-        checkboxDiv.classList.remove('bg-mantiq-blue', 'border-mantiq-blue');
-        checkIcon.classList.add('opacity-0');
-    }
-    calculateTotal();
-}
-
-/**
  * Calculates investment total and updates summary UI
- * REQUIRES USERS > 0 TO INITIATE PRICE
  */
 function calculateTotal() {
     const key = systemSelect.value;
     if (!key) return;
 
-    const users = parseInt(usersInput.value) || 0;
-
-    // RULE: Price is only initiated if users > 0
-    if (users <= 0) {
-        totalPriceEl.innerText = "0";
-        summaryItems.innerHTML = `
-            <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
-                <p class="text-[10px] uppercase tracking-widest font-bold text-sky-400">Add users to initiate price calculation</p>
-            </div>`;
-        return;
-    }
+    // Minimum 1 user enforced by adjustUsers and min attribute, but handled here just in case.
+    const users = Math.max(1, parseInt(usersInput.value) || 1);
 
     let total = systems[key].fixed;
     let html = `
@@ -494,14 +509,16 @@ function calculateTotal() {
         </div>
     `;
 
-    const checkboxes = document.querySelectorAll("#modulesContainer input[type='checkbox']");
-    checkboxes.forEach(box => {
-        if (box.checked) {
-            const cost = parseInt(box.value);
+    let selectedCount = 0;
+    const moduleButtons = document.querySelectorAll(".module-btn");
+    moduleButtons.forEach(btn => {
+        if (btn.dataset.active === "true") {
+            selectedCount++;
+            const cost = parseInt(btn.dataset.cost);
             total += cost;
             html += `
                 <div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3 mb-2">
-                    <span class="text-slate-400 font-medium">${box.dataset.name}</span>
+                    <span class="text-slate-400 font-medium">${btn.dataset.name}</span>
                     <span class="text-slate-300 font-bold">${cost.toLocaleString()} EGP</span>
                 </div>
             `;
@@ -518,37 +535,59 @@ function calculateTotal() {
         </div>
     `;
 
+    // Visual warning for required selection
+    if (selectedCount < 2) {
+        html += `<p class="mt-3 text-[9px] text-red-400 font-black uppercase tracking-widest italic animate-pulse">Select 2+ features to finalize quote</p>`;
+    }
+
     summaryItems.innerHTML = html;
     totalPriceEl.innerText = total.toLocaleString();
+}
+
+/**
+ * Validates requirements and returns data
+ */
+function getQuoteData() {
+    const key = systemSelect.value;
+    const users = Math.max(1, parseInt(usersInput.value) || 1);
+    const activeButtons = Array.from(document.querySelectorAll(".module-btn")).filter(b => b.dataset.active === "true");
+
+    if (!key || activeButtons.length < 2) {
+        return null;
+    }
+
+    return {
+        key,
+        users,
+        total: totalPriceEl.innerText,
+        moduleNames: activeButtons.map(b => b.dataset.name),
+        systemName: systems[key].name,
+        systemFixed: systems[key].fixed
+    };
 }
 
 /**
  * Copies configuration details to system clipboard
  */
 window.copyQuote = function() {
-    const key = systemSelect.value;
-    const users = parseInt(usersInput.value) || 0;
+    const data = getQuoteData();
 
-    if (!key || users === 0) {
-        // Simple error feedback instead of alert
+    if (!data) {
         const btn = document.getElementById('copyBtn');
-        btn.innerText = "Add users first!";
-        setTimeout(() => btn.innerText = "Get Custom Quote", 2000);
+        const originalText = btn.innerHTML;
+        btn.innerText = "Select 2+ Features & Users";
+        setTimeout(() => btn.innerHTML = originalText, 2000);
         return;
     }
-
-    const total = totalPriceEl.innerText;
-    let selectedModules = [];
-    document.querySelectorAll("#modulesContainer input:checked").forEach(i => selectedModules.push(i.dataset.name));
 
     const text = `
 MANTIQ BUSINESS SERVICES - CONFIGURATION QUOTE
 ===============================================
-Platform: ${systems[key].name} (${systems[key].fixed.toLocaleString()} EGP)
-Selected Modules: ${selectedModules.length > 0 ? selectedModules.join(', ') : 'Base Platform only'}
-User Seats: ${users} License(s) (${(users * USER_UNIT_COST).toLocaleString()} EGP)
+Platform: ${data.systemName} (${data.systemFixed.toLocaleString()} EGP)
+Selected Modules: ${data.moduleNames.join(', ')}
+User Seats: ${data.users} License(s) (${(data.users * USER_UNIT_COST).toLocaleString()} EGP)
 ===============================================
-ESTIMATED TOTAL INVESTMENT: ${total} EGP
+ESTIMATED TOTAL INVESTMENT: ${data.total} EGP
 Date: ${new Date().toLocaleDateString()}
 ===============================================
     `.trim();
@@ -568,6 +607,46 @@ Date: ${new Date().toLocaleDateString()}
         console.error('Copy failed', err);
     }
     document.body.removeChild(textarea);
+};
+
+/**
+ * Downloads the summary as a PNG image
+ */
+window.downloadQuoteAsPNG = function() {
+    const data = getQuoteData();
+    if (!data) {
+        const btn = document.getElementById('downloadBtn');
+        const originalText = btn.innerHTML;
+        btn.innerText = "Incomplete Setup";
+        setTimeout(() => btn.innerHTML = originalText, 2000);
+        return;
+    }
+
+    // Populate hidden template
+    document.getElementById('png-date').innerText = "Generated: " + new Date().toLocaleDateString() + " at " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('png-total').innerText = data.total;
+    
+    // Sync summary content
+    document.getElementById('png-summary-content').innerHTML = summaryItems.innerHTML;
+    
+    // Clean up PNG template summary (remove warning if present)
+    const warning = document.getElementById('png-summary-content').querySelector('p');
+    if (warning) warning.remove();
+
+    const template = document.getElementById('png-capture-template');
+    
+    // Use html2canvas
+    html2canvas(template, {
+        backgroundColor: '#101828',
+        scale: 2,
+        logging: false,
+        useCORS: true
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `MANTIQ-Quote-${data.systemName.replace(/\s+/g, '-')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
 };
 
 // Start application when DOM is ready
