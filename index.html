@@ -20,6 +20,12 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f9fafb;
+            /* Extra bottom padding for mobile sticky bar */
+            padding-bottom: 5rem;
+        }
+
+        @media (min-width: 1024px) {
+            body { padding-bottom: 2rem; }
         }
 
         .mantiq-navy-bg {
@@ -44,12 +50,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.25rem;
+            padding: 1rem;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .custom-select-trigger { padding: 1.25rem; }
         }
 
         .custom-select-trigger:hover {
@@ -66,7 +76,7 @@
             border-radius: 1rem;
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
             z-index: 50;
-            max-height: 300px;
+            max-height: 250px;
             overflow-y: auto;
             opacity: 0;
             visibility: hidden;
@@ -81,10 +91,11 @@
         }
 
         .custom-option {
-            padding: 1rem 1.25rem;
+            padding: 0.875rem 1.25rem;
             cursor: pointer;
             transition: background 0.2s;
             border-bottom: 1px solid #f1f5f9;
+            font-size: 0.875rem;
         }
 
         .custom-option:last-child {
@@ -153,11 +164,39 @@
             background-color: #101828;
             color: white;
         }
+
+        .mobile-footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #101828;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #1e293b;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen">
 
-    <!-- PNG Generation Template -->
+    <!-- Mobile Bottom Total Bar (Visible only on small screens) -->
+    <div class="mobile-footer-bar lg:hidden">
+        <div>
+            <span class="text-slate-500 text-[10px] uppercase font-black tracking-widest block">Initial Investment</span>
+            <div class="text-xl font-extrabold text-white">
+                <span id="mobileTotalPriceDisplay">0</span> <small class="text-sky-400 text-xs font-bold">EGP</small>
+            </div>
+        </div>
+        <button onclick="scrollToSummary()" class="bg-mantiq-blue text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider">
+            View Details
+        </button>
+    </div>
+
+    <!-- PNG Generation Template (Hidden) -->
     <div id="png-capture-template" class="rounded-[2.5rem] border border-slate-800">
         <div class="mb-8">
              <h1 class="text-3xl font-extrabold tracking-tighter text-white">MANTIQ</h1>
@@ -174,40 +213,41 @@
                 <span id="png-total">0</span> <span class="text-sm text-sky-400">EGP</span>
             </div>
             <p id="png-note" class="text-[10px] text-slate-500 mt-2 italic"></p>
+            <p id="png-term-note" class="text-[10px] text-sky-500 mt-1 font-bold"></p>
         </div>
         <p class="mt-10 text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em]">Strategic Digital Solutions for Modern Business</p>
     </div>
 
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <header class="mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 pb-8">
+        <header class="mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 pb-8">
             <div class="flex items-center gap-4">
-                <h1 class="text-4xl logo-text">MANTIQ</h1>
+                <h1 class="text-3xl md:text-4xl logo-text">MANTIQ</h1>
             </div>
             <div class="text-center md:text-right">
-                <h2 class="text-xl font-bold text-slate-800">Pricing Configurator</h2>
-                <p class="text-slate-500 text-sm font-medium">Strategic Digital Solutions for Modern Business</p>
+                <h2 class="text-lg md:text-xl font-bold text-slate-800">Pricing Configurator</h2>
+                <p class="text-slate-500 text-xs md:text-sm font-medium">Strategic Digital Solutions for Modern Business</p>
             </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Left Column -->
+            <!-- Left Column: Step-by-Step Config -->
             <div class="lg:col-span-2 space-y-6">
                 
                 <!-- STEP 1: SERVICE CATEGORY -->
-                <section class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <section class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">1. Select Service Category</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">1. Select Service Category</h2>
                     </div>
                     
                     <div class="custom-select-container" id="serviceDropdown">
                         <div class="custom-select-trigger" id="serviceTrigger">
-                            <span class="text-slate-400 font-semibold" id="selectedServiceLabel">-- Choose Service Type --</span>
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            <span class="text-slate-400 font-semibold truncate" id="selectedServiceLabel">-- Choose Service Type --</span>
+                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </div>
                         <div class="custom-options" id="serviceOptionsList">
                             <!-- Injected Services -->
@@ -215,19 +255,41 @@
                     </div>
                 </section>
 
-                <!-- STEP 2: PRODUCT SELECTION -->
-                <section id="productSelectionSection" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
+                <!-- STEP 1.5: BUSINESS TYPE -->
+                <section id="businessTypeSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm hidden transition-all duration-300">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        </div>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">1.5 Select Business Type</h2>
+                    </div>
+                    
+                    <div class="custom-select-container" id="businessTypeDropdown">
+                        <div class="custom-select-trigger" id="businessTypeTrigger">
+                            <span class="text-slate-400 font-semibold truncate" id="selectedBusinessTypeLabel">-- Choose Business Type --</span>
+                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </div>
+                        <div class="custom-options" id="businessTypeOptionsList">
+                            <div class="custom-option" onclick="selectBusinessType('Online Store')">Online Store <span class="text-[10px] ml-2 bg-sky-50 text-sky-500 px-2 py-0.5 rounded-full font-bold">40% Discount</span></div>
+                            <div class="custom-option" onclick="selectBusinessType('Start-up Company')">Start-up Company</div>
+                            <div class="custom-option" onclick="selectBusinessType('Corporate')">Corporate</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 2: PRODUCT SELECTION -->
+                <section id="productSelectionSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">2. Select Product or Package</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">2. Select Product or Package</h2>
                     </div>
                     
                     <div class="custom-select-container" id="productDropdown">
                         <div class="custom-select-trigger" id="productTrigger">
-                            <span class="text-slate-400 font-semibold" id="selectedProductLabel">-- Choose Product --</span>
-                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            <span class="text-slate-400 font-semibold truncate" id="selectedProductLabel">-- Choose Product --</span>
+                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </div>
                         <div class="custom-options" id="productOptionsList">
                             <!-- Injected Products -->
@@ -236,51 +298,52 @@
                 </section>
 
                 <!-- STEP 3: FEATURES -->
-                <section id="modulesSection" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
+                <section id="modulesSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 tracking-tight" id="featuresTitle">3. Strategic Features</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight" id="featuresTitle">3. Strategic Features</h2>
                     </div>
-                    <p class="text-sm text-slate-400 mb-6 font-medium" id="featuresInstruction">Select <span class="text-mantiq-blue font-bold">2 or more</span> to finalize the quote.</p>
+                    <p class="text-xs md:text-sm text-slate-400 mb-6 font-medium" id="featuresInstruction">Select <span class="text-mantiq-blue font-bold">2 or more</span> to finalize the quote.</p>
                     
-                    <div id="modulesContainer" class="flex flex-wrap gap-3">
+                    <div id="modulesContainer" class="flex flex-wrap gap-2 md:gap-3">
                         <!-- Module buttons or static list -->
                     </div>
                 </section>
 
-                <!-- STEP 4: USERS (Hidden for Web/Mobile) -->
-                <section id="userSeatsSection" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <!-- STEP 4: USERS -->
+                <section id="userSeatsSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
                     <div class="flex items-center gap-3 mb-6">
-                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         </div>
-                        <h2 class="text-lg font-bold text-slate-800 tracking-tight text-mantiq-blue">4. User Seats</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight text-mantiq-blue">4. User Seats</h2>
                     </div>
                     
-                    <div class="flex flex-col md:flex-row md:items-center gap-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-6 md:gap-8">
                         <div class="flex-1">
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Enterprise Licenses</label>
                             <div class="relative">
-                                <input type="number" id="users" min="1" value="1" class="w-full p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-extrabold text-2xl">
-                                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
-                                    <button onclick="adjustUsers(-1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">-</button>
-                                    <button onclick="adjustUsers(1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">+</button>
+                                <input type="number" id="users" min="1" value="1" class="w-full p-4 md:p-5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-extrabold text-xl md:text-2xl">
+                                <div class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 flex gap-1.5 md:gap-2">
+                                    <button onclick="adjustUsers(-1)" class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">-</button>
+                                    <button onclick="adjustUsers(1)" class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 shadow-sm">+</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-slate-900 px-6 py-4 rounded-2xl border-l-4 border-mantiq-blue min-w-[160px]">
+                        <div class="bg-slate-900 px-6 py-4 rounded-2xl border-l-4 border-mantiq-blue min-w-[140px] md:min-w-[160px]">
                             <span class="text-[10px] text-slate-400 block uppercase tracking-widest font-black mb-1">Standard Rate</span>
-                            <span class="text-white font-extrabold text-xl">200 <small class="text-xs text-sky-400">EGP / Seat</small></span>
+                            <span class="text-white font-extrabold text-lg md:text-xl">200 <small class="text-[10px] text-sky-400">EGP/Seat</small></span>
                         </div>
                     </div>
+                    <p class="text-[10px] text-sky-500 font-bold mt-4 uppercase tracking-widest">* User seat fees are paid quarterly</p>
                 </section>
             </div>
 
-            <!-- Right Column -->
-            <div class="lg:col-span-1">
-                <div id="main-summary-card" class="mantiq-navy-bg text-white p-8 rounded-[2.5rem] sticky top-8 custom-shadow border-t border-slate-800">
+            <!-- Right Column: Investment Summary -->
+            <div class="lg:col-span-1" id="summaryAnchor">
+                <div id="main-summary-card" class="mantiq-navy-bg text-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] sticky top-8 custom-shadow border-t border-slate-800">
                     <div class="flex items-center gap-3 mb-8">
                         <span class="w-2 h-2 rounded-full bg-mantiq-blue animate-pulse"></span>
                         <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Investment Summary</h3>
@@ -288,27 +351,28 @@
 
                     <div id="summaryItems" class="space-y-4 mb-10 min-h-[120px]">
                         <div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center">
-                             <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Start by choosing a service</p>
+                             <p class="text-[10px] uppercase tracking-widest font-bold text-slate-400 px-4">Start by choosing a service</p>
                         </div>
                     </div>
 
                     <div class="border-t border-slate-800 pt-8 mt-8">
                         <div class="mb-8">
-                            <span class="block text-slate-500 text-[10px] uppercase tracking-[0.3em] font-black mb-2">Estimated Total</span>
-                            <div class="text-4xl font-extrabold text-white">
+                            <span class="block text-slate-500 text-[10px] uppercase tracking-[0.3em] font-black mb-2">Estimated Total Investment</span>
+                            <div class="text-4xl md:text-5xl font-extrabold text-white">
                                 <span id="totalPrice">0</span>
                                 <span class="text-sm text-mantiq-blue font-bold tracking-widest ml-1">EGP</span>
                             </div>
-                            <p id="customizationNote" class="hidden text-[9px] text-slate-500 italic mt-3 font-medium uppercase tracking-widest">Note: Prices are based on customizations</p>
+                            <p id="customizationNote" class="hidden text-[9px] text-slate-500 italic mt-3 font-medium uppercase tracking-widest leading-relaxed">Note: Prices are based on customizations</p>
+                            <p id="paymentTermNote" class="text-[9px] text-sky-400 font-black uppercase tracking-widest mt-2"></p>
                         </div>
 
                         <div class="flex flex-col gap-3">
-                            <button onclick="copyQuote()" id="copyBtn" class="btn-mantiq w-full py-4 rounded-2xl font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                            <button onclick="copyQuote()" id="copyBtn" class="btn-mantiq w-full py-4 rounded-2xl font-extrabold text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
                                 Copy Details
                             </button>
-                            <button onclick="downloadQuoteAsPNG()" id="downloadBtn" class="bg-slate-800 hover:bg-slate-700 text-white w-full py-4 rounded-2xl font-extrabold text-xs uppercase tracking-widest flex items-center justify-center gap-3 border border-slate-700 transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            <button onclick="downloadQuoteAsPNG()" id="downloadBtn" class="bg-slate-800 hover:bg-slate-700 text-white w-full py-4 rounded-2xl font-extrabold text-[10px] md:text-xs uppercase tracking-widest flex items-center justify-center gap-3 border border-slate-700 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                                 Download Image
                             </button>
                         </div>
@@ -319,7 +383,7 @@
                     </div>
                 </div>
                 
-                <p class="text-center text-[10px] text-slate-400 mt-6 font-bold uppercase tracking-widest">
+                <p class="text-center text-[10px] text-slate-400 mt-6 font-bold uppercase tracking-widest mb-12 lg:mb-0">
                     &copy; 2024 MANTIQ BUSINESS SERVICES
                 </p>
             </div>
@@ -329,13 +393,13 @@
 
 <script>
 /**
- * Master Product Database with ranges for non-system products
+ * Master Product Database
  */
 const productData = {
     "Business Systems": {
-        "crm": { name: "CRM Tracker", fixed: 8000, modules: { "Leads":1500, "Customers":1500, "Contacts":1000, "Deals":2000, "Pipeline":1000, "Activities":2300, "Follow-ups":1000, "Notes & Comments":1000, "Communication History":2000, "Reports":3000, "Chats":5000 } },
+        "crm": { name: "CRM Tracker", fixed: 8000, modules: { "Leads":1500, "Customers":1500, "Contacts":1000, "Deals":2000, "Pipeline":1000, "Activities":2300, "Follow-ups":1000, "Notes & Comments":1000, "Communication History":2000, "Reports":3000, "Chats":8000 } },
         "hr": { name: "HR Tracker", fixed: 8000, modules: { "Employees Directory":2000, "Attendance":4000, "Leaves":3000, "Payroll":7000, "Recruitment":4000, "Performance":3000, "Training":2000, "Contracts":2000, "Penalties":2000, "Reports":3000 } },
-        "finance": { name: "Finance Tracker", fixed: 7000, modules: { "Income":1300, "Expenses":1300, "Invoices":3000, "Bills":1800, "Payments":1200, "Accounts / Wallets":1000, "Cash Flow":4000, "Budgeting":3000, "Taxes":1200, "P&L":1400, "Financial Reports":5000, "Export":2000 } },
+        "finance": { name: "Finance Tracker", fixed: 7000, modules: { "Invoices":3000, "Bills":1800, "Payments":1200, "Accounts / Wallets":1000, "Cash Flow":5000, "Budgeting":4000, "Taxes":1200, "P&L":1400, "Financial Reports":5000, "Export":2000 } },
         "sales": { name: "Sales Tracker", fixed: 5000, modules: { "Leads":1500, "Opportunities":2000, "Quotations":1800, "Orders":1500, "Products":1500, "Pricing":2000, "Pipeline":1200, "Targets":1500, "Commissions":1200, "Customers":2000, "Reports":3000 } }
     },
     "Company Portfolio (Web)": {
@@ -362,12 +426,17 @@ const productData = {
 
 let activeService = null;
 let activeProduct = null;
+let activeBusinessType = null;
 
 const elements = {
     serviceTrigger: document.getElementById("serviceTrigger"),
     serviceOptionsList: document.getElementById("serviceOptionsList"),
     serviceDropdown: document.getElementById("serviceDropdown"),
     selectedServiceLabel: document.getElementById("selectedServiceLabel"),
+    businessTypeSection: document.getElementById("businessTypeSection"),
+    businessTypeTrigger: document.getElementById("businessTypeTrigger"),
+    businessTypeDropdown: document.getElementById("businessTypeDropdown"),
+    selectedBusinessTypeLabel: document.getElementById("selectedBusinessTypeLabel"),
     productTrigger: document.getElementById("productTrigger"),
     productOptionsList: document.getElementById("productOptionsList"),
     productDropdown: document.getElementById("productDropdown"),
@@ -381,17 +450,23 @@ const elements = {
     userSeatsSection: document.getElementById("userSeatsSection"),
     featuresTitle: document.getElementById("featuresTitle"),
     featuresInstruction: document.getElementById("featuresInstruction"),
-    customizationNote: document.getElementById("customizationNote")
+    customizationNote: document.getElementById("customizationNote"),
+    paymentTermNote: document.getElementById("paymentTermNote"),
+    mobileTotal: document.getElementById("mobileTotalPriceDisplay")
 };
 
 function init() {
     renderServices();
     elements.serviceTrigger.addEventListener('click', () => elements.serviceDropdown.classList.toggle('open'));
+    elements.businessTypeTrigger.addEventListener('click', () => elements.businessTypeDropdown.classList.toggle('open'));
     elements.productTrigger.addEventListener('click', () => elements.productDropdown.classList.toggle('open'));
+    
     document.addEventListener('click', (e) => {
         if (!elements.serviceDropdown.contains(e.target)) elements.serviceDropdown.classList.remove('open');
+        if (!elements.businessTypeDropdown.contains(e.target)) elements.businessTypeDropdown.classList.remove('open');
         if (!elements.productDropdown.contains(e.target)) elements.productDropdown.classList.remove('open');
     });
+    
     if (elements.usersInput) elements.usersInput.addEventListener('input', calculateTotal);
 }
 
@@ -404,29 +479,50 @@ function renderServices() {
 window.selectService = function(cat) {
     activeService = cat;
     activeProduct = null;
+    activeBusinessType = null;
+    
     elements.selectedServiceLabel.innerText = cat;
     elements.selectedServiceLabel.classList.replace('text-slate-400', 'text-slate-800');
-    elements.productSelectionSection.classList.remove('opacity-40', 'pointer-events-none');
+    
     elements.selectedProductLabel.innerText = "-- Choose Product --";
     elements.selectedProductLabel.classList.replace('text-slate-800', 'text-slate-400');
+    elements.selectedBusinessTypeLabel.innerText = "-- Choose Business Type --";
+    elements.selectedBusinessTypeLabel.classList.replace('text-slate-800', 'text-slate-400');
+    
     elements.modulesSection.classList.add('opacity-40', 'pointer-events-none');
     elements.modulesContainer.innerHTML = "";
-    
-    // Toggle users section and customization note
+
     if (cat === "Business Systems") {
+        elements.businessTypeSection.classList.remove('hidden');
+        elements.productSelectionSection.classList.add('opacity-40', 'pointer-events-none');
         elements.userSeatsSection.classList.remove('hidden');
         elements.customizationNote.classList.add('hidden');
         elements.featuresTitle.innerText = "3. Strategic Features";
-        elements.featuresInstruction.innerHTML = 'Select <span class="text-mantiq-blue font-bold">2 or more</span> to finalize the quote.';
+        elements.featuresInstruction.innerHTML = 'Select <span class="text-mantiq-blue font-bold">2 or more</span> features.';
+        elements.paymentTermNote.innerText = "* Mixed: One-time & Quarterly";
     } else {
+        elements.businessTypeSection.classList.add('hidden');
+        elements.productSelectionSection.classList.remove('opacity-40', 'pointer-events-none');
         elements.userSeatsSection.classList.add('hidden');
         elements.customizationNote.classList.remove('hidden');
-        elements.featuresTitle.innerText = "3. Included Package Features";
-        elements.featuresInstruction.innerText = "Review the standard features included in this tier.";
+        elements.featuresTitle.innerText = "3. Package Features";
+        elements.featuresInstruction.innerText = "Standard features included in this tier.";
+        elements.paymentTermNote.innerText = "* Mixed: One-time & Quarterly Support";
+        renderProducts(cat);
     }
 
-    renderProducts(cat);
     elements.serviceDropdown.classList.remove('open');
+    calculateTotal();
+};
+
+window.selectBusinessType = function(type) {
+    activeBusinessType = type;
+    elements.selectedBusinessTypeLabel.innerText = type;
+    elements.selectedBusinessTypeLabel.classList.replace('text-slate-400', 'text-slate-800');
+    elements.businessTypeDropdown.classList.remove('open');
+    
+    elements.productSelectionSection.classList.remove('opacity-40', 'pointer-events-none');
+    renderProducts(activeService);
     calculateTotal();
 };
 
@@ -455,7 +551,7 @@ function loadModules(cat, key) {
         const cost = modules[modName];
         if (cat === "Business Systems") {
             const btn = document.createElement('button');
-            btn.className = 'module-btn px-6 py-3 rounded-full text-sm font-semibold';
+            btn.className = 'module-btn px-4 md:px-6 py-2 md:py-3 rounded-full text-xs md:text-sm font-semibold';
             btn.innerText = modName;
             btn.dataset.cost = cost;
             btn.dataset.name = modName;
@@ -468,10 +564,9 @@ function loadModules(cat, key) {
             };
             elements.modulesContainer.appendChild(btn);
         } else {
-            // Static display for Web/Mobile
             const chip = document.createElement('div');
-            chip.className = 'px-4 py-2 rounded-lg bg-sky-50 text-mantiq-blue text-xs font-bold border border-sky-100 flex items-center gap-2';
-            chip.innerHTML = `<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>${modName}`;
+            chip.className = 'px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-sky-50 text-mantiq-blue text-[10px] md:text-xs font-bold border border-sky-100 flex items-center gap-2';
+            chip.innerHTML = `<svg class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>${modName}`;
             elements.modulesContainer.appendChild(chip);
         }
     }
@@ -484,9 +579,10 @@ window.adjustUsers = function(delta) {
 };
 
 function calculateTotal() {
-    if (!activeService || !activeProduct) {
-        elements.summaryItems.innerHTML = `<div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center"><p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Choose service and product</p></div>`;
+    if (!activeService || !activeProduct || (activeService === "Business Systems" && !activeBusinessType)) {
+        elements.summaryItems.innerHTML = `<div class="py-10 opacity-30 border border-dashed border-slate-700 rounded-2xl text-center"><p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Complete selection steps</p></div>`;
         elements.totalPriceEl.innerText = "0";
+        elements.mobileTotal.innerText = "0";
         return;
     }
 
@@ -495,7 +591,10 @@ function calculateTotal() {
     
     if (activeService === "Business Systems") {
         const users = Math.max(1, parseInt(elements.usersInput.value) || 1);
-        let numericTotal = prod.fixed;
+        const multiplier = (activeBusinessType === 'Online Store') ? 0.6 : 1.0;
+        const discountedFixed = prod.fixed * multiplier;
+        
+        let numericTotal = discountedFixed;
         let featHtml = "";
         let selectedCount = 0;
         
@@ -504,35 +603,90 @@ function calculateTotal() {
                 selectedCount++;
                 const cost = parseInt(btn.dataset.cost);
                 numericTotal += cost;
-                featHtml += `<div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3 mb-2"><span class="text-slate-400 font-medium">${btn.dataset.name}</span><span class="text-slate-300 font-bold">${cost.toLocaleString()} EGP</span></div>`;
+                featHtml += `<div class="flex justify-between items-start text-xs border-l border-slate-700 pl-3 mb-2"><div><span class="text-slate-400 font-medium">${btn.dataset.name}</span><br><span class="text-[7px] text-slate-500 uppercase">One-time</span></div><span class="text-slate-300 font-bold">${cost.toLocaleString()} EGP</span></div>`;
             }
         });
 
         const userCostTotal = users * 200;
         numericTotal += userCostTotal;
         elements.totalPriceEl.innerText = numericTotal.toLocaleString();
+        elements.mobileTotal.innerText = numericTotal.toLocaleString();
         
         totalHtml = `
-            <div class="flex justify-between items-start mb-4"><div><span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Base Price</span><span class="text-slate-100 font-bold text-sm">${prod.name}</span></div><span class="text-white font-extrabold text-xs">${prod.fixed.toLocaleString()} EGP</span></div>
+            <div class="mb-4 pb-4 border-b border-slate-800">
+                <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Business Context</span>
+                <span class="text-white font-bold text-sm">${activeBusinessType}</span>
+            </div>
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Base Platform ${activeBusinessType === 'Online Store' ? '(40% Discounted)' : ''}</span>
+                    <span class="text-slate-100 font-bold text-sm">${prod.name}</span><br>
+                    <span class="text-[7px] text-slate-500 uppercase">One-time payment</span>
+                </div>
+                <span class="text-white font-extrabold text-xs">${discountedFixed.toLocaleString()} EGP</span>
+            </div>
             ${featHtml}
-            <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800 mt-4"><span class="text-sky-400 font-black uppercase tracking-widest">${users} User Seat(s)</span><span class="text-white font-extrabold">${userCostTotal.toLocaleString()} EGP</span></div>
+            <div class="flex justify-between items-start text-xs pt-4 border-t border-slate-800 mt-4">
+                <div>
+                    <span class="text-sky-400 font-black uppercase tracking-widest">${users} User Seat(s)</span><br>
+                    <span class="text-[7px] text-sky-500 uppercase">Paid Quarterly</span>
+                </div>
+                <span class="text-white font-extrabold">${userCostTotal.toLocaleString()} EGP</span>
+            </div>
         `;
         
         if (selectedCount < 2) totalHtml += `<p class="mt-3 text-[9px] text-red-400 font-black uppercase tracking-widest italic animate-pulse text-center">Select 2+ features</p>`;
     } else {
-        // Web/Mobile Display
-        elements.totalPriceEl.innerText = prod.fixed;
+        // Websites and Mobile Apps - Addition logic for total
         const featuresList = Object.keys(prod.modules).map(m => `<li class="text-slate-400 text-[11px] list-disc ml-4">${m}</li>`).join("");
+        
+        // Parsing range e.g., "10,000 – 15,000"
+        const cleanVal = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, ''));
+        const rawRanges = prod.fixed.split(' – ');
+        
+        // Calculate maintenance ranges
+        const mRangeValues = rawRanges.map(r => Math.round(cleanVal(r) * 0.05));
+        const maintenanceStr = mRangeValues.map(v => v.toLocaleString()).join(' – ') + (prod.fixed.includes('+') ? '+' : '');
+
+        // Calculate combined ranges (Investment + 1st Quarter Support)
+        const combinedValues = rawRanges.map((r, idx) => Math.round(cleanVal(r) + mRangeValues[idx]));
+        const combinedStr = combinedValues.map(v => v.toLocaleString()).join(' – ') + (prod.fixed.includes('+') ? '+' : '');
+
+        elements.totalPriceEl.innerText = combinedStr;
+        elements.mobileTotal.innerText = combinedStr;
+        
         totalHtml = `
             <div class="space-y-4">
-                <div><span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Service Tier</span><span class="text-slate-100 font-bold text-sm">${prod.name}</span></div>
-                <div class="py-3 border-y border-slate-800"><span class="text-[9px] text-slate-500 uppercase font-black tracking-widest block mb-2">Package Includes</span><ul class="space-y-1">${featuresList}</ul></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Service Tier</span>
+                        <span class="text-slate-100 font-bold text-sm">${prod.name}</span><br>
+                        <span class="text-[7px] text-slate-500 uppercase">One-time Investment</span>
+                    </div>
+                    <span class="text-white font-extrabold text-xs">${prod.fixed} EGP</span>
+                </div>
+                <div class="flex justify-between items-start py-3 border-y border-slate-800">
+                    <div>
+                        <span class="text-sky-400 text-[9px] block uppercase font-black tracking-widest mb-1">Support & Maintenance</span>
+                        <span class="text-slate-100 font-bold text-xs">Customer Support Package</span><br>
+                        <span class="text-[7px] text-sky-500 uppercase font-bold tracking-widest">Added to Initial Investment</span>
+                    </div>
+                    <span class="text-sky-400 font-extrabold text-xs">${maintenanceStr} EGP</span>
+                </div>
+                <div>
+                    <span class="text-[9px] text-slate-500 uppercase font-black tracking-widest block mb-2">Package Includes</span>
+                    <ul class="space-y-1">${featuresList}</ul>
+                </div>
             </div>
         `;
     }
 
     elements.summaryItems.innerHTML = totalHtml;
 }
+
+window.scrollToSummary = function() {
+    document.getElementById('summaryAnchor').scrollIntoView({ behavior: 'smooth' });
+};
 
 function getQuoteData() {
     if (!activeService || !activeProduct) return null;
@@ -543,6 +697,7 @@ function getQuoteData() {
 
     return {
         service: activeService,
+        businessType: activeBusinessType,
         productName: productData[activeService][activeProduct].name,
         total: elements.totalPriceEl.innerText,
         features: activeService === "Business Systems" ? activeFeat.map(f => f.dataset.name) : Object.keys(productData[activeService][activeProduct].modules),
@@ -553,17 +708,33 @@ function getQuoteData() {
 window.copyQuote = function() {
     const data = getQuoteData();
     if (!data) return;
+    
+    let termStr = "";
+    if (data.service === "Business Systems") {
+        termStr = "* Platforms/Features: One-time | Users: Quarterly";
+    } else {
+        const prod = productData[activeService][activeProduct];
+        const maintenance = prod.fixed.split(' – ').map(p => {
+            const num = parseFloat(p.replace(/,/g, '').replace(/\+/g, ''));
+            return Math.round(num * 0.05).toLocaleString();
+        }).join(' – ') + (prod.fixed.includes('+') ? '+' : '');
+        termStr = `* Combined Total includes initial Maintenance fee of ${maintenance} EGP`;
+    }
+
     const text = `
 MANTIQ BUSINESS SERVICES
 =========================
 Service: ${data.service}
+${data.businessType ? 'Business Type: ' + data.businessType : ''}
 Product: ${data.productName}
-${data.users ? 'Users: ' + data.users : ''}
+${data.users ? 'Users: ' + data.users + ' (Paid Quarterly)' : ''}
 Features: ${data.features.join(', ')}
-TOTAL ESTIMATED: ${data.total} EGP
-${data.service !== "Business Systems" ? "* Prices are based on customizations" : ""}
+TOTAL ESTIMATED INVESTMENT: ${data.total} EGP
+${termStr}
+${data.service !== "Business Systems" ? "* Note: Prices are based on customizations" : ""}
 =========================
     `.trim();
+    
     const textarea = document.createElement('textarea');
     textarea.value = text;
     document.body.appendChild(textarea);
@@ -582,6 +753,17 @@ window.downloadQuoteAsPNG = function() {
     document.getElementById('png-total').innerText = data.total;
     document.getElementById('png-summary-content').innerHTML = elements.summaryItems.innerHTML.replace(/<p.*finalize.*<\/p>/i, "");
     document.getElementById('png-note').innerText = (data.service !== "Business Systems") ? "* Note: Prices are based on customizations" : "";
+    
+    if (data.service === "Business Systems") {
+        document.getElementById('png-term-note').innerText = "* Platform/Features: One-time | Users: Paid Quarterly";
+    } else {
+        const prod = productData[activeService][activeProduct];
+        const maintenance = prod.fixed.split(' – ').map(p => {
+            const num = parseFloat(p.replace(/,/g, '').replace(/\+/g, ''));
+            return Math.round(num * 0.05).toLocaleString();
+        }).join(' – ') + (prod.fixed.includes('+') ? '+' : '');
+        document.getElementById('png-term-note').innerText = `* Combined Total includes initial Maintenance fee (${maintenance} EGP)`;
+    }
     
     const template = document.getElementById('png-capture-template');
     html2canvas(template, { backgroundColor: '#101828', scale: 2, useCORS: true }).then(canvas => {
