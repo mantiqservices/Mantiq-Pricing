@@ -8,6 +8,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2canvas for PNG export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Security & Anti-Inspect Script -->
+    <script>
+        // 1. Disable Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Disable Keyboard Shortcuts
+        document.onkeydown = function(e) {
+            // Disable F12
+            if(e.keyCode == 123) return false;
+            // Disable Ctrl+Shift+I (Inspect)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+            // Disable Ctrl+Shift+C (Inspect Element)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+            // Disable Ctrl+Shift+J (Console)
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+            // Disable Ctrl+U (View Source)
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        };
+
+        // 3. Debugger Trap (Pauses execution if DevTools is opened)
+        setInterval(function() {
+            debugger;
+        }, 100);
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
@@ -22,6 +48,11 @@
             background-color: #f9fafb;
             /* Extra bottom padding for mobile sticky bar */
             padding-bottom: 5rem;
+            /* Disable text selection to protect content */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         @media (min-width: 1024px) {
@@ -232,7 +263,7 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Left Column: Step-by-Step Config -->
+            <!-- Left Column -->
             <div class="lg:col-span-2 space-y-6">
                 
                 <!-- STEP 1: SERVICE CATEGORY -->
@@ -241,7 +272,7 @@
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         </div>
-                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight"> Select Service Category</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">Select Service Category</h2>
                     </div>
                     
                     <div class="custom-select-container" id="serviceDropdown">
@@ -255,13 +286,13 @@
                     </div>
                 </section>
 
-                <!-- STEP : BUSINESS TYPE -->
+                <!-- STEP: BUSINESS TYPE (Cascading) -->
                 <section id="businessTypeSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm hidden transition-all duration-300">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         </div>
-                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight"> Select Business Type</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">Select Business Type</h2>
                     </div>
                     
                     <div class="custom-select-container" id="businessTypeDropdown">
@@ -277,13 +308,13 @@
                     </div>
                 </section>
 
-                <!-- STEP 2: PRODUCT SELECTION -->
+                <!-- STEP: PRODUCT SELECTION -->
                 <section id="productSelectionSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         </div>
-                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight"> Select Product or Package</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">Select Product or Package</h2>
                     </div>
                     
                     <div class="custom-select-container" id="productDropdown">
@@ -297,7 +328,7 @@
                     </div>
                 </section>
 
-                <!-- STEP 3: FEATURES -->
+                <!-- STEP: FEATURES -->
                 <section id="modulesSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
@@ -312,13 +343,13 @@
                     </div>
                 </section>
 
-                <!-- STEP 4: USERS -->
+                <!-- STEP: USERS -->
                 <section id="userSeatsSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                         </div>
-                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight text-mantiq-blue"> User Seats</h2>
+                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight text-mantiq-blue">User Seats</h2>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row sm:items-center gap-6 md:gap-8">
@@ -497,7 +528,7 @@ window.selectService = function(cat) {
         elements.productSelectionSection.classList.add('opacity-40', 'pointer-events-none');
         elements.userSeatsSection.classList.remove('hidden');
         elements.customizationNote.classList.add('hidden');
-        elements.featuresTitle.innerText = "3. Strategic Features";
+        elements.featuresTitle.innerText = "Strategic Features";
         elements.featuresInstruction.innerHTML = 'Select <span class="text-mantiq-blue font-bold">2 or more</span> features.';
         elements.paymentTermNote.innerText = "* Mixed: One-time & Quarterly";
     } else {
@@ -505,7 +536,7 @@ window.selectService = function(cat) {
         elements.productSelectionSection.classList.remove('opacity-40', 'pointer-events-none');
         elements.userSeatsSection.classList.add('hidden');
         elements.customizationNote.classList.remove('hidden');
-        elements.featuresTitle.innerText = "3. Package Features";
+        elements.featuresTitle.innerText = "Package Features";
         elements.featuresInstruction.innerText = "Standard features included in this tier.";
         elements.paymentTermNote.innerText = "* Mixed: One-time & Quarterly Support";
         renderProducts(cat);
@@ -637,18 +668,16 @@ function calculateTotal() {
         
         if (selectedCount < 2) totalHtml += `<p class="mt-3 text-[9px] text-red-400 font-black uppercase tracking-widest italic animate-pulse text-center">Select 2+ features</p>`;
     } else {
-        // Websites and Mobile Apps - Addition logic for total
+        // Websites and Mobile Apps
         const featuresList = Object.keys(prod.modules).map(m => `<li class="text-slate-400 text-[11px] list-disc ml-4">${m}</li>`).join("");
         
-        // Parsing range e.g., "10,000 – 15,000"
+        // Ranges
         const cleanVal = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, ''));
         const rawRanges = prod.fixed.split(' – ');
         
-        // Calculate maintenance ranges
         const mRangeValues = rawRanges.map(r => Math.round(cleanVal(r) * 0.05));
         const maintenanceStr = mRangeValues.map(v => v.toLocaleString()).join(' – ') + (prod.fixed.includes('+') ? '+' : '');
 
-        // Calculate combined ranges (Investment + 1st Quarter Support)
         const combinedValues = rawRanges.map((r, idx) => Math.round(cleanVal(r) + mRangeValues[idx]));
         const combinedStr = combinedValues.map(v => v.toLocaleString()).join(' – ') + (prod.fixed.includes('+') ? '+' : '');
 
@@ -685,7 +714,8 @@ function calculateTotal() {
 }
 
 window.scrollToSummary = function() {
-    document.getElementById('summaryAnchor').scrollIntoView({ behavior: 'smooth' });
+    const summaryAnchor = document.getElementById('summaryAnchor');
+    if (summaryAnchor) summaryAnchor.scrollIntoView({ behavior: 'smooth' });
 };
 
 function getQuoteData() {
@@ -741,9 +771,11 @@ ${data.service !== "Business Systems" ? "* Note: Prices are based on customizati
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    elements.toast = document.getElementById('toast');
-    elements.toast.style.opacity = '1';
-    setTimeout(() => elements.toast.style.opacity = '0', 2000);
+    const toast = document.getElementById('toast');
+    if (toast) {
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 2000);
+    }
 };
 
 window.downloadQuoteAsPNG = function() {
