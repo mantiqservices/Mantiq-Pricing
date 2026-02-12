@@ -229,7 +229,7 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
-                    <input type="email" id="clientEmail" required placeholder="name@gmail.com" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-medium">
+                    <input type="email" id="clientEmail" required placeholder="name@company.com" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-medium">
                 </div>
                 
                 <div class="pt-4">
@@ -515,21 +515,34 @@ async function handleFormSubmit(e) {
         quarterly: elements.quarterlyEl.innerText
     };
 
-    // Correct URL from user deployment
+    // Google Apps Script Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxv09A4YstU_u6tg5o2kyITwe42AAJg0d2bEVn7GEzdeOvbth4PdBq0mCWjSeVry3Vymw/exec'; 
 
     try {
+        // Use URLSearchParams for simple key-value transmission to Google Sheets
+        const params = new URLSearchParams();
+        for (const key in leadData) {
+            params.append(key, leadData[key]);
+        }
+
         await fetch(scriptURL, { 
             method: 'POST', 
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(leadData)
+            mode: 'no-cors', // Standard for bypass CORS with Google Apps Script
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString()
         });
         
+        // no-cors mode doesn't allow reading the response body, 
+        // but it will reach the script if the status is OK.
         document.getElementById('leadForm').classList.add('hidden');
         document.getElementById('successState').classList.remove('hidden');
     } catch (err) {
         console.error('Submission error:', err);
+        // Basic user feedback for error
+        alert("Failed to send request. Please try again or contact us directly.");
     } finally {
         btn.disabled = false;
         btn.innerText = "Submit Request";
