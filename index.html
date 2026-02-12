@@ -33,7 +33,7 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f9fafb;
-            padding-bottom: 7rem; /* Increased for better mobile clearance */
+            padding-bottom: 7rem; /* Space for fixed mobile bar */
             -webkit-user-select: none;
             user-select: none;
             overflow-x: hidden;
@@ -48,21 +48,20 @@
         .text-mantiq-blue { color: var(--mantiq-blue); }
         .bg-mantiq-blue { background-color: var(--mantiq-blue); }
 
-        /* Custom Select Enhancements */
+        /* Custom Dropdown Styling */
         .custom-select-trigger {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.15rem;
+            padding: 1.125rem;
             background: #ffffff;
             border: 1.5px solid #e2e8f0;
             border-radius: 1.25rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .custom-select-trigger:active { transform: scale(0.98); border-color: var(--mantiq-blue); }
-
+        .custom-select-trigger:active { transform: scale(0.98); }
+        
         .custom-options {
             position: absolute;
             top: 100%;
@@ -71,14 +70,14 @@
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 1.25rem;
-            box-shadow: 0 12px 30px -10px rgba(0,0,0,0.15);
-            z-index: 60;
-            max-height: 280px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            z-index: 50;
+            max-height: 250px;
             overflow-y: auto;
             opacity: 0;
             visibility: hidden;
             transform: translateY(10px);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             margin-top: 0.5rem;
         }
 
@@ -92,60 +91,62 @@
             padding: 1rem 1.25rem;
             cursor: pointer;
             border-bottom: 1px solid #f1f5f9;
-            font-size: 0.95rem;
+            font-size: 0.9375rem;
             font-weight: 500;
         }
-        .custom-option:last-child { border-bottom: none; }
         .custom-option:active { background: #f0f9ff; color: var(--mantiq-blue); }
 
-        /* Module Button (Chips) optimized for Mobile */
+        /* Feature Chips */
         .module-btn {
-            padding: 0.75rem 1.25rem;
-            border-radius: 1rem;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border: 1.5px solid #e2e8f0;
-            background: white;
-            color: #475569;
             transition: all 0.2s;
+            border: 1.5px solid #e2e8f0;
+            background-color: white;
+            color: #64748b;
+            padding: 0.875rem;
+            border-radius: 1.125rem;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 3.25rem; /* Larger tap target */
+            min-height: 3.5rem;
         }
         .module-btn.active {
             background-color: var(--mantiq-blue);
             border-color: var(--mantiq-blue);
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 174, 239, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 174, 239, 0.2);
         }
 
-        /* Fixed Mobile Total Bar */
+        /* Mobile Investment Bar */
         .mobile-footer-bar {
             position: fixed;
-            bottom: 1rem;
+            bottom: 1.25rem;
             left: 1rem;
             right: 1rem;
             background: rgba(16, 24, 40, 0.98);
             backdrop-filter: blur(12px);
-            padding: 1rem 1.25rem;
+            padding: 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 100;
-            border-radius: 1.75rem;
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .custom-shadow { box-shadow: 0 20px 25px -5px rgba(16, 24, 40, 0.05); }
 
         /* Modal Polish */
         .modal-card {
             background: white;
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             max-height: 85vh;
-            border-radius: 2.25rem;
-            padding: 1.75rem;
+            border-radius: 2.5rem;
+            padding: 1.5rem;
             transform: translateY(20px);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow-y: auto;
@@ -154,45 +155,44 @@
             transform: translateY(0);
         }
 
-        /* Card Visual Depth */
-        .config-card {
-            background: white;
-            border-radius: 1.75rem;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-            padding: 1.5rem;
-            transition: transform 0.2s ease;
+        #png-capture-template {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 600px;
+            padding: 40px;
+            background-color: #101828;
+            color: white;
         }
-        @media (min-width: 768px) { .config-card { padding: 2rem; } }
     </style>
 </head>
-<body class="p-4 md:p-10 min-h-screen">
+<body class="p-4 md:p-8 lg:p-12 min-h-screen">
 
     <!-- Mobile Bottom Total Bar -->
     <div class="mobile-footer-bar lg:hidden">
         <div class="flex flex-col min-w-0 pr-2">
-            <span class="text-sky-400 text-[7px] uppercase font-black tracking-[0.2em] block mb-0.5">ESTIMATED INVESTMENT</span>
+            <span class="text-slate-400 text-[7px] uppercase font-black tracking-[0.2em] block mb-0.5">EST. INVESTMENT</span>
             <div class="text-lg font-extrabold text-white leading-none truncate">
-                <span id="mobileOneTimeDisplay">0</span> <span class="text-[10px] text-slate-400">EGP</span>
+                <span id="mobileOneTimeDisplay">0</span> <span class="text-[9px] text-slate-500">EGP</span>
             </div>
         </div>
         <div class="flex gap-2 shrink-0">
-            <button onclick="scrollToSummary()" class="bg-slate-800 text-white w-10 h-10 flex items-center justify-center rounded-xl">
+            <button onclick="scrollToSummary()" class="bg-slate-800 text-white w-10 h-10 flex items-center justify-center rounded-xl shadow-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
             </button>
-            <button onclick="openRequestModal()" class="bg-mantiq-blue text-white px-5 py-2.5 rounded-xl font-bold text-[11px] uppercase tracking-wider shadow-lg">
+            <button onclick="openRequestModal()" class="bg-mantiq-blue text-white px-5 py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-wider shadow-xl">
                 Request
             </button>
         </div>
     </div>
 
-    <!-- Modal remains the same structure with improved padding -->
+    <!-- Request Service Modal -->
     <div id="requestModal" class="modal-overlay fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[200] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
-        <div class="modal-card shadow-2xl">
+        <div class="modal-card custom-shadow">
             <div class="flex justify-between items-start mb-6 sticky top-0 bg-white pb-2 z-10">
                 <div>
                     <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Request Service</h3>
-                    <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-widest">MANTIQ Business Solutions</p>
+                    <p class="text-[10px] text-slate-500 mt-1 font-black uppercase tracking-widest">Strategy & Implementation</p>
                 </div>
                 <button onclick="closeRequestModal()" class="text-slate-400 hover:text-slate-600 p-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -202,125 +202,141 @@
             <form id="leadForm" class="space-y-4">
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
-                    <input type="text" id="clientName" required placeholder="Full Name" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-sky-500 outline-none transition-all">
+                    <input type="text" id="clientName" required placeholder="Name" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-sky-500 outline-none">
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
-                    <input type="tel" id="clientPhone" required placeholder="+20 000 000 0000" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-sky-500 outline-none transition-all">
+                    <input type="tel" id="clientPhone" required placeholder="+20..." class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-sky-500 outline-none">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Work Email</label>
-                    <input type="email" id="clientEmail" required placeholder="email@company.com" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-sky-500 outline-none transition-all">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <input type="email" id="clientEmail" required placeholder="email@company.com" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-sky-500 outline-none">
                 </div>
                 
                 <div class="pt-4">
-                    <button type="submit" id="submitLeadBtn" class="w-full bg-mantiq-blue text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:brightness-110 active:scale-[0.97] transition-all flex items-center justify-center gap-3">
-                        Send Inquiry
+                    <button type="submit" id="submitLeadBtn" class="w-full bg-mantiq-blue text-white py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+                        Submit Inquiry
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>
                 </div>
             </form>
             
             <div id="successState" class="hidden text-center py-10">
-                <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                 </div>
-                <h4 class="text-2xl font-black text-slate-900">Thank You!</h4>
-                <p class="text-sm text-slate-500 mt-2 font-medium">Your request is being processed.<br>We will contact you shortly.</p>
-                <button onclick="closeRequestModal()" class="mt-8 text-sky-500 font-black text-[10px] uppercase tracking-widest border-b-2 border-sky-100 pb-1">Close Configurator</button>
+                <h4 class="text-xl font-black text-slate-900">Request Received</h4>
+                <p class="text-sm text-slate-500 mt-2">We will contact you shortly.</p>
+                <button onclick="closeRequestModal()" class="mt-8 text-sky-500 font-bold text-[10px] uppercase tracking-widest">Back</button>
             </div>
         </div>
     </div>
 
-    <!-- Main Container -->
+    <!-- PNG Template -->
+    <div id="png-capture-template" class="rounded-[2.5rem]">
+        <div class="mb-8">
+             <h1 class="text-4xl font-black tracking-tighter text-white">MANTIQ</h1>
+             <p class="text-sky-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-1">For Business Services</p>
+        </div>
+        <div id="png-summary-content" class="space-y-4 mb-8"></div>
+        <div class="border-t border-slate-800 pt-8 space-y-8">
+            <div class="bg-slate-800/40 p-6 rounded-[2rem] border border-slate-700/50">
+                <span class="text-mantiq-blue text-[10px] uppercase font-black tracking-[0.3em] block mb-3">ONE-TIME INVESTMENT</span>
+                <div class="text-4xl font-extrabold text-white"><span id="png-onetime">0</span> <small class="text-sm text-sky-400">EGP</small></div>
+            </div>
+            <div class="px-6">
+                <span class="text-slate-500 text-[9px] uppercase font-black tracking-[0.3em] block mb-2">QUARTERLY RECURRING</span>
+                <div class="text-2xl font-extrabold text-slate-200"><span id="png-quarterly">0</span> <small class="text-sm text-slate-500">EGP</small></div>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-6xl mx-auto">
         <header class="mb-10 md:mb-16 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 pb-10 text-center md:text-left">
             <div>
-                <h1 class="text-4xl md:text-5xl logo-text tracking-tighter">MANTIQ</h1>
-                <p class="text-slate-400 text-[10px] md:text-xs uppercase font-black tracking-[0.4em] mt-2">For Business Services</p>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">MANTIQ</h1>
+                <p class="text-slate-400 text-[10px] md:text-xs font-black uppercase tracking-[0.4em] mt-2">For Business Services</p>
             </div>
-            <div class="hidden md:block">
-                <h2 class="text-lg md:text-xl font-extrabold text-slate-800">System Configurator</h2>
-                <p class="text-slate-500 text-xs">Dynamic ROI & Investment Breakdown</p>
+            <div>
+                <h2 class="text-lg md:text-xl font-extrabold text-slate-800">Pricing Configurator</h2>
+                <p class="text-slate-500 text-xs font-medium">Strategic Digital Solutions</p>
             </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
-            <!-- Left Side: Inputs -->
-            <div class="lg:col-span-2 space-y-6 md:space-y-8">
-                
-                <!-- Category Section -->
-                <section class="config-card">
+            <div class="lg:col-span-2 space-y-6 md:space-y-10">
+                <!-- Category -->
+                <section class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 custom-shadow">
                     <div class="flex items-center gap-4 mb-8">
                         <div class="w-10 h-10 rounded-2xl bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                         </div>
-                        <h2 class="text-base md:text-xl font-black text-slate-800 tracking-tight">Service Category</h2>
+                        <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tight">Service Category</h2>
                     </div>
                     <div class="custom-select-container" id="serviceDropdown">
                         <div class="custom-select-trigger" id="serviceTrigger">
-                            <span class="text-slate-400 font-bold truncate text-sm md:text-base" id="selectedServiceLabel">Select Category</span>
+                            <span class="text-slate-400 font-bold truncate text-sm" id="selectedServiceLabel">Select Category</span>
                             <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
                         </div>
-                        <div class="custom-options shadow-xl" id="serviceOptionsList"></div>
+                        <div class="custom-options" id="serviceOptionsList"></div>
                     </div>
                 </section>
 
-                <!-- Type Section (Dynamic) -->
-                <section id="typeSection" class="config-card hidden">
+                <!-- Type (Dynamic) -->
+                <section id="typeSection" class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 custom-shadow hidden">
                     <div class="flex items-center gap-4 mb-8">
                         <div class="w-10 h-10 rounded-2xl bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                         </div>
-                        <h2 class="text-base md:text-xl font-black text-slate-800 tracking-tight" id="typeLabel">Type</h2>
+                        <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tight" id="typeLabel">Type</h2>
                     </div>
                     <div class="custom-select-container" id="typeDropdown">
                         <div class="custom-select-trigger" id="typeTrigger">
-                            <span class="text-slate-400 font-bold truncate text-sm md:text-base" id="selectedTypeLabel">Select Type</span>
+                            <span class="text-slate-400 font-bold truncate text-sm" id="selectedTypeLabel">Select Type</span>
                             <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
                         </div>
-                        <div class="custom-options shadow-xl" id="typeOptionsList"></div>
+                        <div class="custom-options" id="typeOptionsList"></div>
                     </div>
                 </section>
 
-                <!-- Tier Section -->
-                <section id="productSelectionSection" class="config-card opacity-40 pointer-events-none transition-all duration-500">
-                    <h2 class="text-base md:text-xl font-black text-slate-800 tracking-tight mb-8">Product Tier</h2>
+                <!-- Tier -->
+                <section id="productSelectionSection" class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 custom-shadow opacity-40 pointer-events-none transition-all duration-300">
+                    <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tight mb-8">Product Tier</h2>
                     <div class="custom-select-container" id="productDropdown">
                         <div class="custom-select-trigger" id="productTrigger">
-                            <span class="text-slate-400 font-bold truncate text-sm md:text-base" id="selectedProductLabel">Select Tier</span>
+                            <span class="text-slate-400 font-bold truncate text-sm" id="selectedProductLabel">Select Tier</span>
                             <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
                         </div>
-                        <div class="custom-options shadow-xl" id="productOptionsList"></div>
+                        <div class="custom-options" id="productOptionsList"></div>
                     </div>
                 </section>
 
-                <!-- Strategic Features Section -->
-                <section id="modulesSection" class="config-card opacity-40 pointer-events-none transition-all duration-500">
+                <!-- Strategic Features -->
+                <section id="modulesSection" class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 custom-shadow opacity-40 pointer-events-none transition-all duration-300">
                     <div class="mb-8">
-                        <h2 class="text-base md:text-xl font-black text-slate-800 tracking-tight" id="featuresTitle">Strategic Features</h2>
-                        <p class="text-[11px] font-bold text-slate-400 mt-1 uppercase tracking-widest" id="featuresInstruction">Tailor your enterprise solution</p>
+                        <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tight" id="featuresTitle">Strategic Features</h2>
+                        <p class="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest" id="featuresInstruction">Tailor your solution</p>
                     </div>
-                    <div id="modulesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                    <div id="modulesContainer" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
                 </section>
 
-                <!-- User Seats Section -->
-                <section id="userSeatsSection" class="config-card hidden">
-                    <h2 class="text-base md:text-xl font-black text-slate-800 tracking-tight mb-8">Access Control</h2>
+                <!-- Seats -->
+                <section id="userSeatsSection" class="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 custom-shadow hidden">
+                    <h2 class="text-base md:text-lg font-black text-slate-800 tracking-tight mb-8">Enterprise Access</h2>
                     <div class="space-y-4">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Active User Licenses</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">License Count</label>
                         <div class="relative max-w-xs">
                             <input type="number" id="users" min="1" value="1" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-sky-500 outline-none text-slate-800 font-black text-2xl">
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-2">
-                                <button onclick="adjustUsers(-1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl font-bold shadow-sm">-</button>
-                                <button onclick="adjustUsers(1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl font-bold shadow-sm">+</button>
+                                <button onclick="adjustUsers(-1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl shadow-sm">-</button>
+                                <button onclick="adjustUsers(1)" class="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-xl shadow-sm">+</button>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- Right Side: Sticky Summary -->
+            <!-- Summary Card -->
             <div class="lg:col-span-1" id="summaryAnchor">
                 <div id="main-summary-card" class="mantiq-navy-bg text-white p-8 md:p-10 rounded-[2.5rem] sticky top-10 shadow-2xl border-t border-slate-800">
                     <div class="flex items-start gap-4 mb-10">
@@ -328,36 +344,33 @@
                         <h3 class="text-[11px] font-black text-slate-100 uppercase tracking-[0.15em] leading-relaxed">MANTIQ Business Services<br>Investment Summary</h3>
                     </div>
                     
-                    <div id="summaryItems" class="space-y-5 mb-12 min-h-[100px]">
-                        <p class="text-center py-10 opacity-20 text-[10px] font-black text-slate-400 uppercase tracking-widest">Awaiting selection...</p>
+                    <div id="summaryItems" class="space-y-4 mb-12 min-h-[80px]">
+                        <p class="text-center py-8 opacity-20 text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Selection Required</p>
                     </div>
 
                     <div class="border-t border-slate-800 pt-10 space-y-8">
-                        <!-- Highlighted Total -->
                         <div class="bg-slate-800/60 p-6 rounded-[2rem] border border-slate-700/50">
-                            <span class="block text-mantiq-blue text-[10px] uppercase tracking-[0.3em] font-black mb-3">ONE-TIME INVESTMENT</span>
-                            <div class="text-3xl md:text-4xl font-black text-white leading-tight">
-                                <span id="oneTimeTotal">0</span> <small class="text-[10px] text-mantiq-blue font-bold ml-1 uppercase">EGP</small>
+                            <span class="block text-mantiq-blue text-[9px] uppercase tracking-[0.3em] font-black mb-3">ONE-TIME INVESTMENT</span>
+                            <div class="text-2xl md:text-4xl font-black text-white leading-tight">
+                                <span id="oneTimeTotal">0</span> <small class="text-[10px] text-mantiq-blue font-bold ml-1">EGP</small>
                             </div>
                         </div>
                         
-                        <!-- Secondary Recurrence -->
                         <div class="px-6">
-                            <span class="block text-slate-500 text-[9px] uppercase tracking-[0.3em] font-black mb-3">QUARTERLY RECURRING</span>
+                            <span class="block text-slate-500 text-[8px] uppercase tracking-[0.3em] font-black mb-3">QUARTERLY RECURRING</span>
                             <div class="text-xl font-extrabold text-slate-200 leading-none">
-                                <span id="quarterlyTotal">0</span> <small class="text-[10px] text-slate-500 font-bold ml-1 uppercase">EGP</small>
+                                <span id="quarterlyTotal">0</span> <small class="text-[10px] text-slate-500 font-bold ml-1">EGP</small>
                             </div>
                         </div>
 
-                        <!-- Actions -->
                         <div class="flex flex-col gap-4 pt-4">
                             <button onclick="openRequestModal()" class="bg-white text-slate-900 py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
                                 <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-                                Request Service
+                                Request service
                             </button>
                             <div class="grid grid-cols-2 gap-3">
-                                <button onclick="copyQuote()" class="bg-slate-800 py-4 rounded-xl font-bold text-[9px] uppercase tracking-widest text-slate-300">Copy Quote</button>
-                                <button onclick="downloadQuoteAsPNG()" class="bg-slate-800 py-4 rounded-xl font-bold text-[9px] uppercase tracking-widest text-slate-300 border border-slate-700">Export PNG</button>
+                                <button onclick="copyQuote()" class="bg-slate-800 py-4 rounded-xl font-bold text-[9px] uppercase tracking-widest text-slate-400">Copy Quote</button>
+                                <button onclick="downloadQuoteAsPNG()" class="bg-slate-800 py-4 rounded-xl font-bold text-[9px] uppercase tracking-widest text-slate-400 border border-slate-700">Export PNG</button>
                             </div>
                         </div>
                     </div>
@@ -370,41 +383,41 @@
 const productData = {
     "Business Systems": {
         "Company Profile or Services": {
-            "crm": { name: "CRM Tracker", fixed: 8000, modules: { "Leads Mgmt":1500, "Customer DB":1500, "Contact Logs":1000, "Deal Tracker":2000, "Pipeline":1000, "Activity Log":2300, "BI Reports":3000, "Live Chats":8000 } },
-            "hr": { name: "HR Tracker", fixed: 8000, modules: { "Employee Directory":2000, "Attendance":4000, "Leaves Mgmt":3000, "Payroll System":7000, "Recruitment":4000, "Analytics":3000 } },
-            "finance": { name: "Finance Tracker", fixed: 7000, modules: { "Invoice Engine":3000, "Bill Tracker":1800, "Payment Hub":1200, "Cash Flow":5000, "Financial BI":5000 } },
-            "sales": { name: "Sales Tracker", fixed: 5000, modules: { "Opportunities":2000, "Quotation Tool":1800, "Order Manager":1500, "Product Catalog":1500, "Performance BI":3000 } }
+            "crm": { name: "CRM Tracker", fixed: 8000, modules: { "Leads":1500, "Customers":1500, "Contacts":1000, "Deals":2000, "Pipeline":1000, "Activities":2300, "Reports":3000, "Chats":8000 } },
+            "hr": { name: "HR Tracker", fixed: 8000, modules: { "Employees":2000, "Attendance":4000, "Leaves":3000, "Payroll":7000, "Recruitment":4000, "Reports":3000 } },
+            "finance": { name: "Finance Tracker", fixed: 7000, modules: { "Invoices":3000, "Bills":1800, "Payments":1200, "Cash Flow":5000, "Reports":5000 } },
+            "sales": { name: "Sales Tracker", fixed: 5000, modules: { "Opportunities":2000, "Quotations":1800, "Orders":1500, "Inventory":1500, "Sales BI":3000 } }
         }
     },
     "Websites": {
         "Company Profile or Services": {
-            "starter": { name: "Starter Tier", fixed: "10,000 - 15,000", modules: { "Responsive UI":0, "SEO Package":0, "CMS Panel":0, "Social Connect":0, "5 Base Pages":0 } },
-            "advanced": { name: "Advanced Tier", fixed: "20,000 - 35,000", modules: { "Form Engine":0, "Blog/CMS":0, "Interactive UI":0, "Web Analytics":0, "10 Base Pages":0 } },
-            "corporate": { name: "Corporate Tier", fixed: "45,000 - 75,000+", modules: { "Enterprise Portal":0, "API Layer":0, "Cyber Security":0, "Cloud Hosting":0, "Automations":0 } }
+            "starter": { name: "Starter Tier", fixed: "10,000 - 15,000", modules: { "Responsive":0, "SEO Setup":0, "CMS Panel":0, "Social Links":0, "5 Pages":0 } },
+            "advanced": { name: "Advanced Tier", fixed: "20,000 - 35,000", modules: { "Forms":0, "Blog":0, "Interactive":0, "Analytics":0, "10 Pages":0 } },
+            "corporate": { name: "Corporate Tier", fixed: "45,000 - 75,000+", modules: { "Full Portal":0, "API Sync":0, "High Security":0, "Cloud Host":0, "Automations":0 } }
         },
         "E-Commerce": {
-            "starter": { name: "Starter E-Shop", fixed: "25,000 - 40,000", modules: { "Inventory":0, "Payment Gate":0, "Checkout":0, "Sales BI":0 } },
-            "advanced": { name: "Advanced E-Shop", fixed: "50,000 - 80,000", modules: { "Smart Filters":0, "Coupons":0, "Recovery":0, "Logistics":0 } },
+            "starter": { name: "Starter Shop", fixed: "25,000 - 40,000", modules: { "Stock Mgmt":0, "Payment":0, "Checkout":0, "Sales Dash":0 } },
+            "advanced": { name: "Advanced Shop", fixed: "50,000 - 80,000", modules: { "Filters":0, "Coupons":0, "Recovery":0, "Shipping":0 } },
             "corporate": { name: "Enterprise Shop", fixed: "100,000 - 180,000+", modules: { "Multi-vendor":0, "B2B Module":0, "WMS Sync":0, "Loyalty":0 } }
         }
     },
     "Mobile Applications": {
         "Company Profile or Services": {
-            "starter": { name: "Starter App", fixed: "40,000 - 60,000", modules: { "iOS/Android":0, "UX/UI Design":0, "Push Notify":0, "Profiles":0, "Submission":0 } },
-            "advanced": { name: "Advanced App", fixed: "70,000 - 110,000", modules: { "Real-time Sync":0, "Admin Hub":0, "In-App Chat":0, "Social Auth":0, "Advanced BI":0 } },
-            "corporate": { name: "Corporate App", fixed: "130,000 - 200,000+", modules: { "Super App Build":0, "Micro API":0, "Scalability":0, "AI Logic":0, "Deep Data":0 } }
+            "starter": { name: "Starter App", fixed: "40,000 - 60,000", modules: { "Dual OS":0, "UI/UX":0, "Notify":0, "Profiles":0, "Stores":0 } },
+            "advanced": { name: "Advanced App", fixed: "70,000 - 110,000", modules: { "Real-time":0, "Admin Hub":0, "In-App Chat":0, "Social Login":0, "BI Tools":0 } },
+            "corporate": { name: "Corporate App", fixed: "130,000 - 200,000+", modules: { "Super App":0, "Microservices":0, "Scale-ready":0, "AI Logic":0, "Big Data":0 } }
         },
         "E-Commerce": {
-            "starter": { name: "Starter Shop App", fixed: "80,000 - 120,000", modules: { "Sync Engine":0, "Payment Flow":0, "Tracking":0, "History":0 } },
-            "advanced": { name: "Advanced Shop App", fixed: "130,000 - 200,000", modules: { "Smart Search":0, "Wishlist":0, "Marketing Hub":0, "3PL Integration":0 } },
-            "corporate": { name: "Super Marketplace", fixed: "250,000 - 400,000+", modules: { "Vendor Auth":0, "Financial Split":0, "Global Scale":0, "Personalized":0 } }
+            "starter": { name: "Starter Shop App", fixed: "80,000 - 120,000", modules: { "Product Sync":0, "Payment Flow":0, "Tracking":0, "History":0 } },
+            "advanced": { name: "Advanced Shop App", fixed: "130,000 - 200,000", modules: { "Search":0, "Wishlist":0, "Marketing":0, "Logistic API":0 } },
+            "corporate": { name: "Super Marketplace", fixed: "250,000 - 400,000+", modules: { "Vendor Sync":0, "Financial Split":0, "Global Scale":0, "Profiling":0 } }
         }
     },
     "Business Development": {
         "Company Profile or Services": {
-            "starter": { name: "Starter Strategy", fixed: "15,000 - 25,000", modules: { "Market Analysis":0, "Growth Map":0, "Digital Audit":0 } },
-            "advanced": { name: "Advanced Expansion", fixed: "30,000 - 50,000", modules: { "Sales Funnels":0, "Lead Setup":0, "Workflow Auto":0 } },
-            "corporate": { name: "Enterprise Growth", fixed: "60,000+", modules: { "Change Mgmt":0, "Process Eng":0, "Global Scaling":0 } }
+            "starter": { name: "Starter Strategy", fixed: "15,000 - 25,000", modules: { "Analysis":0, "Growth Map":0, "Digital Audit":0 } },
+            "advanced": { name: "Advanced Expansion", fixed: "30,000 - 50,000", modules: { "Funnels":0, "Lead Setup":0, "Workflows":0 } },
+            "corporate": { name: "Enterprise Growth", fixed: "60,000+", modules: { "Change Mgmt":0, "Process Eng":0, "Global Scale":0 } }
         }
     }
 };
@@ -450,10 +463,7 @@ function init() {
 }
 
 function openRequestModal() {
-    if(!activeService || !activeProduct) {
-        alert("Please complete your selection before requesting.");
-        return;
-    }
+    if(!activeService || !activeProduct) return;
     const modal = document.getElementById('requestModal');
     modal.classList.add('active');
     modal.style.opacity = '1';
@@ -507,10 +517,9 @@ async function handleFormSubmit(e) {
         document.getElementById('successState').classList.remove('hidden');
     } catch (err) {
         console.error('Submission error:', err);
-        alert("Transmission error. Please check your connection.");
     } finally {
         btn.disabled = false;
-        btn.innerText = "Send Inquiry";
+        btn.innerText = "Submit Inquiry";
     }
 }
 
@@ -532,8 +541,8 @@ window.selectService = function(cat) {
     } else if (cat === "Websites" || cat === "Mobile Applications") {
         elements.typeLabel.innerText = "Project Focus";
         elements.typeOptionsList.innerHTML = `
-            <div class="custom-option" onclick="selectType('Company Profile or Services')">Company Profile / Services</div>
-            <div class="custom-option" onclick="selectType('E-Commerce')">E-Commerce Platform</div>`;
+            <div class="custom-option" onclick="selectType('Company Profile or Services')">Profile / Services</div>
+            <div class="custom-option" onclick="selectType('E-Commerce')">E-Commerce System</div>`;
         elements.userSeatsSection.classList.add('hidden');
     } else {
         elements.typeSection.classList.add('hidden');
@@ -580,7 +589,7 @@ function loadModules(cat, type, key) {
             btn.dataset.cost = modules[modName]; btn.dataset.name = modName; btn.dataset.active = "false";
             btn.onclick = () => { btn.dataset.active = btn.dataset.active === "true" ? "false" : "true"; btn.classList.toggle('active'); calculateTotal(); };
         } else {
-            btn.className += ' pointer-events-none active bg-sky-50 border-sky-100 text-sky-600';
+            btn.className += ' active pointer-events-none bg-sky-50 border-sky-100 text-sky-600';
             btn.innerText = `✓ ${modName}`;
         }
         elements.modulesContainer.appendChild(btn);
@@ -591,7 +600,7 @@ function loadModules(cat, type, key) {
 function calculateTotal() {
     if (!activeService || !activeProduct || (!activeType && activeService !== "Business Development")) {
         elements.oneTimeEl.innerText = "0"; elements.quarterlyEl.innerText = "0";
-        elements.summaryItems.innerHTML = `<p class="text-center py-10 opacity-20 text-[10px] font-black text-slate-400 uppercase tracking-widest">Awaiting Selection...</p>`;
+        elements.summaryItems.innerHTML = `<p class="text-center py-8 opacity-20 text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">Selection Required</p>`;
         return;
     }
 
@@ -626,7 +635,11 @@ function calculateTotal() {
         if(isMaintenanceRequired) {
             const minQ = Math.round(clean(prod.fixed) * 0.05);
             const maxQ = Math.round(cleanMax(prod.fixed) * 0.05);
-            qLabel = prod.fixed.includes('-') ? `${minQ.toLocaleString()} - ${maxQ.toLocaleString()}` : minQ.toLocaleString();
+            if (prod.fixed.includes('-') || prod.fixed.includes('–')) {
+                qLabel = minQ.toLocaleString() + ' - ' + maxQ.toLocaleString();
+            } else {
+                qLabel = minQ.toLocaleString();
+            }
             if(prod.fixed.includes('+')) qLabel += '+';
         } else {
             qLabel = "0";
@@ -638,18 +651,18 @@ function calculateTotal() {
     document.getElementById("mobileOneTimeDisplay").innerText = otLabel;
 
     const featureChips = currentSelectedFeatures.length > 0 
-        ? `<div class="mt-6 pt-5 border-t border-slate-800/50">
-             <span class="text-slate-500 text-[8px] uppercase font-black tracking-widest block mb-3">Enterprise Modules:</span>
-             <div class="flex flex-wrap gap-1.5">
-                ${currentSelectedFeatures.map(f => `<span class="bg-slate-800/60 text-slate-300 text-[8px] px-2.5 py-1 rounded-md border border-slate-700/50">${f}</span>`).join('')}
+        ? `<div class="mt-4 pt-4 border-t border-slate-800/50">
+             <span class="text-slate-500 text-[8px] uppercase font-black tracking-widest block mb-2">Modules:</span>
+             <div class="flex flex-wrap gap-1">
+                ${currentSelectedFeatures.map(f => `<span class="bg-slate-800/60 text-slate-300 text-[8px] px-2 py-0.5 rounded-md border border-slate-700/50">${f}</span>`).join('')}
              </div>
            </div>` 
         : '';
 
     sumHtml = `
-        <div class="space-y-4">
-            <div class="flex justify-between items-center text-[10px]"><span class="text-slate-500 uppercase font-black">Category</span><span class="font-bold text-white">${activeService}</span></div>
-            <div class="flex justify-between items-center text-[10px]"><span class="text-slate-500 uppercase font-black">Tier</span><span class="font-bold text-white">${prod.name}</span></div>
+        <div class="space-y-3">
+            <div class="flex justify-between items-center text-[10px]"><span class="text-slate-500 uppercase font-black">Category</span><span class="font-bold text-slate-100">${activeService}</span></div>
+            <div class="flex justify-between items-center text-[10px]"><span class="text-slate-500 uppercase font-black">Tier</span><span class="font-bold text-slate-100">${prod.name}</span></div>
             ${featureChips}
         </div>`;
     elements.summaryItems.innerHTML = sumHtml;
@@ -659,11 +672,11 @@ window.adjustUsers = (d) => { elements.usersInput.value = Math.max(1, (parseInt(
 window.scrollToSummary = () => { document.getElementById('summaryAnchor').scrollIntoView({ behavior: 'smooth' }); };
 
 window.copyQuote = () => {
-    const text = `MANTIQ BUSINESS SERVICES QUOTATION\n\nService: ${activeService}\nTier: ${elements.selectedProductLabel.innerText}\n\nOne-time Investment: ${elements.oneTimeEl.innerText} EGP\nQuarterly Recurring: ${elements.quarterlyEl.innerText} EGP\n\nGenerated via MANTIQ Configurator`;
+    const text = `MANTIQ BUSINESS SERVICES\nService: ${activeService}\nTier: ${elements.selectedProductLabel.innerText}\nOne-time: ${elements.oneTimeEl.innerText} EGP\nQuarterly: ${elements.quarterlyEl.innerText} EGP`;
     navigator.clipboard.writeText(text);
     const toast = document.createElement('div');
     toast.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-sky-500 text-white px-8 py-4 rounded-2xl font-black text-xs shadow-2xl z-[999]';
-    toast.innerText = 'COPIED TO CLIPBOARD';
+    toast.innerText = 'COPIED';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 2000);
 };
@@ -674,7 +687,7 @@ window.downloadQuoteAsPNG = () => {
     document.getElementById('png-summary-content').innerHTML = elements.summaryItems.innerHTML;
     html2canvas(document.getElementById('png-capture-template'), { backgroundColor: '#101828', scale: 2 }).then(canvas => {
         const link = document.createElement('a'); 
-        link.download = `MANTIQ-Quotation-${Date.now()}.png`; 
+        link.download = `MANTIQ-Quote-${Date.now()}.png`; 
         link.href = canvas.toDataURL(); 
         link.click();
     });
