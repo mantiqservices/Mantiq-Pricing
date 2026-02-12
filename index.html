@@ -192,7 +192,7 @@
         <div class="flex flex-col">
             <span class="text-slate-500 text-[9px] uppercase font-black tracking-widest block">One-time Total</span>
             <div class="text-lg font-extrabold text-white leading-none mt-1">
-                <span id="mobileOneTimeDisplay">0</span> <small class="text-sky-400 text-[10px] font-bold">EGP</small>
+                <span id="mobileOneTimeDisplay">0</span> <small class="text-sky-400 text-[8px] font-bold">EGP</small>
             </div>
         </div>
         <div class="flex gap-2">
@@ -370,8 +370,8 @@
                         <!-- Highlighted One-time Investment -->
                         <div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/40">
                             <span class="block text-mantiq-blue text-[10px] uppercase tracking-[0.3em] font-black mb-2">ONE-TIME INVESTMENT</span>
-                            <div class="text-4xl md:text-5xl font-extrabold text-white leading-none">
-                                <span id="oneTimeTotal">0</span> <small class="text-sm text-mantiq-blue font-bold ml-1">EGP</small>
+                            <div class="text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                                <span id="oneTimeTotal">0</span> <small class="text-xs text-mantiq-blue font-bold ml-1">EGP</small>
                             </div>
                         </div>
                         
@@ -519,7 +519,6 @@ async function handleFormSubmit(e) {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxv09A4YstU_u6tg5o2kyITwe42AAJg0d2bEVn7GEzdeOvbth4PdBq0mCWjSeVry3Vymw/exec'; 
 
     try {
-        // Use URLSearchParams for simple key-value transmission to Google Sheets
         const params = new URLSearchParams();
         for (const key in leadData) {
             params.append(key, leadData[key]);
@@ -527,7 +526,7 @@ async function handleFormSubmit(e) {
 
         await fetch(scriptURL, { 
             method: 'POST', 
-            mode: 'no-cors', // Standard for bypass CORS with Google Apps Script
+            mode: 'no-cors',
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -535,13 +534,10 @@ async function handleFormSubmit(e) {
             body: params.toString()
         });
         
-        // no-cors mode doesn't allow reading the response body, 
-        // but it will reach the script if the status is OK.
         document.getElementById('leadForm').classList.add('hidden');
         document.getElementById('successState').classList.remove('hidden');
     } catch (err) {
         console.error('Submission error:', err);
-        // Basic user feedback for error
         alert("Failed to send request. Please try again or contact us directly.");
     } finally {
         btn.disabled = false;
@@ -649,16 +645,27 @@ function calculateTotal() {
         otLabel = otSum.toLocaleString();
         qLabel = qSum.toLocaleString();
     } else {
-        const clean = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, '').replace(/ – .*/, ''));
-        const cleanM = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, '').replace(/.* – /, ''));
-        const isM = (activeService === "Websites" || activeService === "Mobile Applications");
+        const clean = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, '').replace(/[–—-].*/, ''));
+        const cleanMax = (v) => {
+            const split = v.split(/[–—-]/);
+            if (split.length < 2) return clean(v);
+            return parseFloat(split[1].trim().replace(/,/g, '').replace(/\+/g, ''));
+        };
+        const isMaintenanceRequired = (activeService === "Websites" || activeService === "Mobile Applications");
         
         currentSelectedFeatures = Object.keys(prod.modules);
-        otLabel = prod.fixed;
-        if(isM) {
+        
+        // Standardize dash formatting to "Min - Max"
+        otLabel = prod.fixed.replace(/[–—]/g, '-');
+        
+        if(isMaintenanceRequired) {
             const minQ = Math.round(clean(prod.fixed) * 0.05);
-            const maxQ = Math.round(cleanM(prod.fixed) * 0.05);
-            qLabel = minQ.toLocaleString() + ' – ' + maxQ.toLocaleString() + (prod.fixed.includes('+') ? '+' : '');
+            const maxQ = Math.round(cleanMax(prod.fixed) * 0.05);
+            if (prod.fixed.includes('-') || prod.fixed.includes('–')) {
+                qLabel = minQ.toLocaleString() + ' - ' + maxQ.toLocaleString() + (prod.fixed.includes('+') ? '+' : '');
+            } else {
+                qLabel = minQ.toLocaleString() + (prod.fixed.includes('+') ? '+' : '');
+            }
         } else {
             qLabel = "0";
         }
