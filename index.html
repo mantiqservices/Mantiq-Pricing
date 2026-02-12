@@ -36,11 +36,12 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f9fafb;
-            padding-bottom: 5rem;
+            padding-bottom: 6rem; /* Space for fixed mobile bar */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            overflow-x: hidden;
         }
 
         @media (min-width: 1024px) {
@@ -144,20 +145,21 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #101828;
-            padding: 1rem 1.5rem;
+            background: rgba(16, 24, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.25rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 100;
-            border-top: 1px solid #1e293b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(16, 24, 40, 0.8);
+            background: rgba(16, 24, 40, 0.85);
             backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
@@ -166,6 +168,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
+            padding: 1rem;
         }
         .modal-overlay.active {
             opacity: 1;
@@ -173,12 +176,17 @@
         }
         .modal-card {
             background: white;
-            width: 90%;
+            width: 100%;
             max-width: 450px;
+            max-height: 90vh;
             border-radius: 2rem;
-            padding: 2.5rem;
+            padding: 1.5rem;
             transform: scale(0.9);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+            .modal-card { padding: 2.5rem; }
         }
         .modal-overlay.active .modal-card {
             transform: scale(1);
@@ -189,17 +197,17 @@
 
     <!-- Mobile Bottom Total Bar -->
     <div class="mobile-footer-bar lg:hidden">
-        <div class="flex flex-col">
-            <span class="text-slate-500 text-[9px] uppercase font-black tracking-widest block">One-time Total</span>
-            <div class="text-lg font-extrabold text-white leading-none mt-1">
-                <span id="mobileOneTimeDisplay">0</span> <small class="text-sky-400 text-[8px] font-bold">EGP</small>
+        <div class="flex flex-col min-w-0">
+            <span class="text-slate-400 text-[8px] uppercase font-black tracking-widest block mb-0.5">ONE-TIME Total</span>
+            <div class="text-base font-extrabold text-white leading-none truncate">
+                <span id="mobileOneTimeDisplay">0</span> <small class="text-sky-400 text-[9px] font-bold">EGP</small>
             </div>
         </div>
-        <div class="flex gap-2">
-            <button onclick="scrollToSummary()" class="bg-slate-800 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider">
+        <div class="flex gap-1.5 shrink-0">
+            <button onclick="scrollToSummary()" class="bg-slate-800 text-white px-3 py-2 rounded-lg font-bold text-[9px] uppercase tracking-wider">
                 Details
             </button>
-            <button onclick="openRequestModal()" class="bg-mantiq-blue text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider shadow-lg">
+            <button onclick="openRequestModal()" class="bg-mantiq-blue text-white px-4 py-2 rounded-lg font-bold text-[9px] uppercase tracking-wider shadow-lg">
                 Request
             </button>
         </div>
@@ -208,12 +216,12 @@
     <!-- Request Service Modal -->
     <div id="requestModal" class="modal-overlay">
         <div class="modal-card custom-shadow">
-            <div class="flex justify-between items-start mb-6">
+            <div class="flex justify-between items-start mb-6 sticky top-0 bg-white pb-2 z-10">
                 <div>
                     <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Request Service</h3>
                     <p class="text-xs text-slate-500 mt-1">Finalize your inquiry for MANTIQ services.</p>
                 </div>
-                <button onclick="closeRequestModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <button onclick="closeRequestModal()" class="text-slate-400 hover:text-slate-600 transition-colors p-1">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -238,7 +246,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </button>
                 </div>
-                <p class="text-[9px] text-center text-slate-400 mt-4 leading-relaxed">By submitting, you agree to MANTIQ's terms of service and allow us to contact you regarding this quotation.</p>
+                <p class="text-[9px] text-center text-slate-400 mt-4 leading-relaxed">By submitting, you agree to MANTIQ's terms of service and allow us to contact you regarding this inquiry.</p>
             </form>
             
             <!-- Success State -->
@@ -273,27 +281,27 @@
     </div>
 
     <div class="max-w-6xl mx-auto">
-        <header class="mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 pb-8">
+        <header class="mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-200 pb-8 text-center md:text-left">
             <h1 class="text-3xl md:text-4xl logo-text">MANTIQ</h1>
-            <div class="text-center md:text-right">
-                <h2 class="text-lg md:text-xl font-bold text-slate-800">Pricing Configurator</h2>
-                <p class="text-slate-500 text-xs md:text-sm">Strategic Digital Solutions for Modern Business</p>
+            <div>
+                <h2 class="text-base md:text-xl font-bold text-slate-800">Pricing Configurator</h2>
+                <p class="text-slate-500 text-[10px] md:text-sm">Strategic Digital Solutions for Modern Business</p>
             </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-6">
                 <!-- Category -->
-                <section class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
+                <section class="bg-white p-5 md:p-8 rounded-3xl border border-slate-100 shadow-sm">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         </div>
-                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight">Select Service Category</h2>
+                        <h2 class="text-sm md:text-lg font-bold text-slate-800 tracking-tight">Service Category</h2>
                     </div>
                     <div class="custom-select-container" id="serviceDropdown">
                         <div class="custom-select-trigger" id="serviceTrigger">
-                            <span class="text-slate-400 font-semibold truncate" id="selectedServiceLabel">-- Choose Service Type --</span>
+                            <span class="text-slate-400 font-semibold truncate text-sm" id="selectedServiceLabel">-- Choose Category --</span>
                             <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </div>
                         <div class="custom-options" id="serviceOptionsList"></div>
@@ -301,16 +309,16 @@
                 </section>
 
                 <!-- Type -->
-                <section id="typeSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm hidden">
+                <section id="typeSection" class="bg-white p-5 md:p-8 rounded-3xl border border-slate-100 shadow-sm hidden">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                         </div>
-                        <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight" id="typeLabel">Select Type</h2>
+                        <h2 class="text-sm md:text-lg font-bold text-slate-800 tracking-tight" id="typeLabel">Type</h2>
                     </div>
                     <div class="custom-select-container" id="typeDropdown">
                         <div class="custom-select-trigger" id="typeTrigger">
-                            <span class="text-slate-400 font-semibold truncate" id="selectedTypeLabel">-- Choose Type --</span>
+                            <span class="text-slate-400 font-semibold truncate text-sm" id="selectedTypeLabel">-- Choose Type --</span>
                             <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </div>
                         <div class="custom-options" id="typeOptionsList"></div>
@@ -318,11 +326,11 @@
                 </section>
 
                 <!-- Tier -->
-                <section id="productSelectionSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
-                    <h2 class="text-base md:text-lg font-bold text-slate-800 tracking-tight mb-6">Select Product Tier</h2>
+                <section id="productSelectionSection" class="bg-white p-5 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
+                    <h2 class="text-sm md:text-lg font-bold text-slate-800 tracking-tight mb-6">Product Tier</h2>
                     <div class="custom-select-container" id="productDropdown">
                         <div class="custom-select-trigger" id="productTrigger">
-                            <span class="text-slate-400 font-semibold truncate" id="selectedProductLabel">-- Choose Tier --</span>
+                            <span class="text-slate-400 font-semibold truncate text-sm" id="selectedProductLabel">-- Choose Tier --</span>
                             <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </div>
                         <div class="custom-options" id="productOptionsList"></div>
@@ -330,18 +338,18 @@
                 </section>
 
                 <!-- Features -->
-                <section id="modulesSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
-                    <h2 class="text-base md:text-lg font-bold text-slate-800 mb-2" id="featuresTitle">Strategic Features</h2>
-                    <p class="text-xs md:text-sm text-slate-400 mb-6 font-medium" id="featuresInstruction">Select features to finalize the quote.</p>
+                <section id="modulesSection" class="bg-white p-5 md:p-8 rounded-3xl border border-slate-100 shadow-sm opacity-40 pointer-events-none transition-all duration-300">
+                    <h2 class="text-sm md:text-lg font-bold text-slate-800 mb-2" id="featuresTitle">Strategic Features</h2>
+                    <p class="text-[10px] md:text-sm text-slate-400 mb-6 font-medium" id="featuresInstruction">Select features to finalize the quote.</p>
                     <div id="modulesContainer" class="flex flex-wrap gap-2 md:gap-3"></div>
                 </section>
 
                 <!-- Seats -->
-                <section id="userSeatsSection" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm hidden">
-                    <h2 class="text-base md:text-lg font-bold text-slate-800 mb-6 text-mantiq-blue">User Seats</h2>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                <section id="userSeatsSection" class="bg-white p-5 md:p-8 rounded-3xl border border-slate-100 shadow-sm hidden">
+                    <h2 class="text-sm md:text-lg font-bold text-slate-800 mb-6 text-mantiq-blue">User Seats</h2>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                         <div class="flex-1">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Enterprise Licenses</label>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Enterprise Licenses</label>
                             <div class="relative">
                                 <input type="number" id="users" min="1" value="1" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none text-slate-800 font-extrabold text-xl">
                                 <div class="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1.5">
@@ -359,34 +367,34 @@
                 <div id="main-summary-card" class="mantiq-navy-bg text-white p-6 md:p-8 rounded-[2.5rem] sticky top-8 custom-shadow border-t border-slate-800">
                     <div class="flex items-start gap-3 mb-8">
                         <span class="w-2 h-2 rounded-full bg-mantiq-blue animate-pulse mt-1 shrink-0"></span>
-                        <h3 class="text-xs font-black text-slate-200 uppercase tracking-[0.1em] leading-relaxed">MANTIQ for Business Services Investment Summary</h3>
+                        <h3 class="text-[10px] md:text-xs font-black text-slate-200 uppercase tracking-[0.1em] leading-relaxed">MANTIQ for Business Services Investment Summary</h3>
                     </div>
                     
-                    <div id="summaryItems" class="space-y-4 mb-10 min-h-[100px]">
+                    <div id="summaryItems" class="space-y-4 mb-10 min-h-[80px]">
                         <p class="text-center py-6 opacity-30 text-[10px] font-bold text-slate-400 px-4 uppercase">Configure your solution</p>
                     </div>
 
                     <div class="border-t border-slate-800 pt-8 space-y-6">
                         <!-- Highlighted One-time Investment -->
                         <div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/40">
-                            <span class="block text-mantiq-blue text-[10px] uppercase tracking-[0.3em] font-black mb-2">ONE-TIME INVESTMENT</span>
-                            <div class="text-3xl md:text-4xl font-extrabold text-white leading-tight">
-                                <span id="oneTimeTotal">0</span> <small class="text-xs text-mantiq-blue font-bold ml-1">EGP</small>
+                            <span class="block text-mantiq-blue text-[9px] uppercase tracking-[0.3em] font-black mb-2">ONE-TIME INVESTMENT</span>
+                            <div class="text-2xl md:text-4xl font-extrabold text-white leading-tight">
+                                <span id="oneTimeTotal">0</span> <small class="text-[10px] text-mantiq-blue font-bold ml-1">EGP</small>
                             </div>
                         </div>
                         
                         <!-- Secondary Quarterly Recurring -->
                         <div class="px-5">
-                            <span class="block text-slate-400 text-[9px] uppercase tracking-[0.3em] font-black mb-2">QUARTERLY RECURRING</span>
-                            <div class="text-2xl font-extrabold text-slate-200 leading-none">
-                                <span id="quarterlyTotal">0</span> <small class="text-xs text-slate-500 font-bold ml-1">EGP</small>
+                            <span class="block text-slate-400 text-[8px] uppercase tracking-[0.3em] font-black mb-2">QUARTERLY RECURRING</span>
+                            <div class="text-xl font-extrabold text-slate-200 leading-none">
+                                <span id="quarterlyTotal">0</span> <small class="text-[10px] text-slate-500 font-bold ml-1">EGP</small>
                             </div>
                         </div>
 
                         <div class="flex flex-col gap-3 pt-2">
                             <button onclick="openRequestModal()" class="bg-white text-slate-900 py-4 rounded-2xl font-extrabold text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl hover:bg-slate-50 transition-all">
                                 <svg class="w-4 h-4 text-mantiq-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-                                Request the service
+                                Request service
                             </button>
                             <div class="grid grid-cols-2 gap-2">
                                 <button onclick="copyQuote()" class="btn-mantiq py-3 rounded-xl font-bold text-[9px] uppercase tracking-widest">Copy Text</button>
@@ -411,32 +419,32 @@ const productData = {
     },
     "Websites": {
         "Company Profile or Services": {
-            "starter": { name: "Starter Tier", fixed: "10,000 – 15,000", modules: { "Responsive Design":0, "SEO Setup":0, "CMS Access":0, "Social Links":0, "5 Main Pages":0 } },
-            "advanced": { name: "Advanced Tier", fixed: "20,000 – 35,000", modules: { "Contact Forms":0, "Blog/CMS":0, "Interactive UI":0, "Analytics Setup":0, "10 Main Pages":0 } },
-            "corporate": { name: "Corporate Tier", fixed: "45,000 – 75,000+", modules: { "Full Portal":0, "Custom API":0, "Enterprise Security":0, "Scalable Cloud":0, "Advanced Automations":0 } }
+            "starter": { name: "Starter Tier", fixed: "10,000 - 15,000", modules: { "Responsive Design":0, "SEO Setup":0, "CMS Access":0, "Social Links":0, "5 Main Pages":0 } },
+            "advanced": { name: "Advanced Tier", fixed: "20,000 - 35,000", modules: { "Contact Forms":0, "Blog/CMS":0, "Interactive UI":0, "Analytics Setup":0, "10 Main Pages":0 } },
+            "corporate": { name: "Corporate Tier", fixed: "45,000 - 75,000+", modules: { "Full Portal":0, "Custom API":0, "Enterprise Security":0, "Scalable Cloud":0, "Advanced Automations":0 } }
         },
         "E-Commerce": {
-            "starter": { name: "Starter E-Shop", fixed: "25,000 – 40,000", modules: { "Inventory Mgmt":0, "Payment Gateway":0, "Standard Checkout":0, "Sales Dashboard":0 } },
-            "advanced": { name: "Advanced E-Shop", fixed: "50,000 – 80,000", modules: { "Smart Filters":0, "Coupons/Offers":0, "Abandoned Cart":0, "Shipping Rules":0 } },
-            "corporate": { name: "Enterprise E-Shop", fixed: "100,000 – 180,000+", modules: { "Multi-vendor Build":0, "B2B Features":0, "WMS Sync":0, "Loyalty Programs":0 } }
+            "starter": { name: "Starter E-Shop", fixed: "25,000 - 40,000", modules: { "Inventory Mgmt":0, "Payment Gateway":0, "Standard Checkout":0, "Sales Dashboard":0 } },
+            "advanced": { name: "Advanced E-Shop", fixed: "50,000 - 80,000", modules: { "Smart Filters":0, "Coupons/Offers":0, "Abandoned Cart":0, "Shipping Rules":0 } },
+            "corporate": { name: "Enterprise E-Shop", fixed: "100,000 - 180,000+", modules: { "Multi-vendor Build":0, "B2B Features":0, "WMS Sync":0, "Loyalty Programs":0 } }
         }
     },
     "Mobile Applications": {
         "Company Profile or Services": {
-            "starter": { name: "Starter App", fixed: "40,000 – 60,000", modules: { "iOS & Android":0, "UI/UX Design":0, "Push Notifications":0, "User Profiles":0, "Store Submissions":0 } },
-            "advanced": { name: "Advanced App", fixed: "70,000 – 110,000", modules: { "Real-time Sync":0, "Admin Dashboard":0, "In-App Chat":0, "Social Auth":0, "Advanced Logic":0 } },
-            "corporate": { name: "Corporate App", fixed: "130,000 – 200,000+", modules: { "Super App Build":0, "Microservices API":0, "High Scalability":0, "AI Integrations":0, "Deep Analytics":0 } }
+            "starter": { name: "Starter App", fixed: "40,000 - 60,000", modules: { "iOS & Android":0, "UI/UX Design":0, "Push Notifications":0, "User Profiles":0, "Store Submissions":0 } },
+            "advanced": { name: "Advanced App", fixed: "70,000 - 110,000", modules: { "Real-time Sync":0, "Admin Dashboard":0, "In-App Chat":0, "Social Auth":0, "Advanced Logic":0 } },
+            "corporate": { name: "Corporate App", fixed: "130,000 - 200,000+", modules: { "Super App Build":0, "Microservices API":0, "High Scalability":0, "AI Integrations":0, "Deep Analytics":0 } }
         },
         "E-Commerce": {
-            "starter": { name: "Starter Shop App", fixed: "80,000 – 120,000", modules: { "Product Sync":0, "Secure Payment":0, "Order Tracking":0, "User History":0 } },
-            "advanced": { name: "Advanced Shop App", fixed: "130,000 – 200,000", modules: { "Smart Search":0, "Wishlist System":0, "Marketing Hub":0, "Logistics API":0 } },
-            "corporate": { name: "Super Marketplace", fixed: "250,000 – 400,000+", modules: { "Multi-vendor Auth":0, "Financial Splitter":0, "Global Scale":0, "Hyper-Personalization":0 } }
+            "starter": { name: "Starter Shop App", fixed: "80,000 - 120,000", modules: { "Product Sync":0, "Secure Payment":0, "Order Tracking":0, "User History":0 } },
+            "advanced": { name: "Advanced Shop App", fixed: "130,000 - 200,000", modules: { "Smart Search":0, "Wishlist System":0, "Marketing Hub":0, "Logistics API":0 } },
+            "corporate": { name: "Super Marketplace", fixed: "250,000 - 400,000+", modules: { "Multi-vendor Auth":0, "Financial Splitter":0, "Global Scale":0, "Hyper-Personalization":0 } }
         }
     },
     "Business Development": {
         "Company Profile or Services": {
-            "starter": { name: "Starter Strategy", fixed: "15,000 – 25,000", modules: { "Market Analysis":0, "Growth Roadmap":0, "Digital Audit":0 } },
-            "advanced": { name: "Advanced Expansion", fixed: "30,000 – 50,000", modules: { "Sales Funnels":0, "Lead Gen Setup":0, "Workflow Automation":0 } },
+            "starter": { name: "Starter Strategy", fixed: "15,000 - 25,000", modules: { "Market Analysis":0, "Growth Roadmap":0, "Digital Audit":0 } },
+            "advanced": { name: "Advanced Expansion", fixed: "30,000 - 50,000", modules: { "Sales Funnels":0, "Lead Gen Setup":0, "Workflow Automation":0 } },
             "corporate": { name: "Enterprise Growth", fixed: "60,000+", modules: { "Change Management":0, "Process Engineering":0, "Global Scalability":0 } }
         }
     }
@@ -515,7 +523,6 @@ async function handleFormSubmit(e) {
         quarterly: elements.quarterlyEl.innerText
     };
 
-    // Google Apps Script Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxv09A4YstU_u6tg5o2kyITwe42AAJg0d2bEVn7GEzdeOvbth4PdBq0mCWjSeVry3Vymw/exec'; 
 
     try {
@@ -554,14 +561,14 @@ window.selectService = function(cat) {
     elements.typeSection.classList.remove('hidden');
     
     if (cat === "Business Systems") {
-        elements.typeLabel.innerText = "Select Business Type";
+        elements.typeLabel.innerText = "Business Type";
         elements.typeOptionsList.innerHTML = `
-            <div class="custom-option" onclick="selectType('Online Store')">Online Store <span class="text-[10px] ml-2 text-sky-500 font-bold">40% Discount</span></div>
+            <div class="custom-option" onclick="selectType('Online Store')">Online Store <span class="text-[9px] ml-1 text-sky-500 font-bold">40% Off</span></div>
             <div class="custom-option" onclick="selectType('Start-up Company')">Start-up Company</div>
             <div class="custom-option" onclick="selectType('Corporate')">Corporate</div>`;
         elements.userSeatsSection.classList.remove('hidden');
     } else if (cat === "Websites" || cat === "Mobile Applications") {
-        elements.typeLabel.innerText = "Select Project Type";
+        elements.typeLabel.innerText = "Project Type";
         elements.typeOptionsList.innerHTML = `
             <div class="custom-option" onclick="selectType('Company Profile or Services')">Company Profile or Services</div>
             <div class="custom-option" onclick="selectType('E-Commerce')">E-Commerce</div>`;
@@ -613,7 +620,7 @@ function loadModules(cat, type, key) {
             elements.modulesContainer.appendChild(btn);
         } else {
             const chip = document.createElement('div');
-            chip.className = 'px-3 py-1.5 rounded-lg bg-sky-50 text-mantiq-blue text-[10px] font-bold border border-sky-100';
+            chip.className = 'px-3 py-1.5 rounded-lg bg-sky-50 text-mantiq-blue text-[9px] font-bold border border-sky-100';
             chip.innerText = `✓ ${modName}`; elements.modulesContainer.appendChild(chip);
         }
     }
@@ -623,7 +630,7 @@ function loadModules(cat, type, key) {
 function calculateTotal() {
     if (!activeService || !activeProduct || (!activeType && activeService !== "Business Development")) {
         elements.oneTimeEl.innerText = "0"; elements.quarterlyEl.innerText = "0";
-        elements.summaryItems.innerHTML = `<p class="text-center py-6 opacity-30 text-[10px] font-bold text-slate-400 px-4 uppercase">Configure your solution</p>`;
+        elements.summaryItems.innerHTML = `<p class="text-center py-6 opacity-30 text-[10px] font-bold text-slate-400 px-4 uppercase tracking-widest">Configuration required</p>`;
         return;
     }
 
@@ -645,17 +652,15 @@ function calculateTotal() {
         otLabel = otSum.toLocaleString();
         qLabel = qSum.toLocaleString();
     } else {
-        const clean = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, '').replace(/[–—-].*/, ''));
+        const clean = (v) => parseFloat(v.replace(/,/g, '').replace(/\+/g, '').replace(/[\-–—].*/, ''));
         const cleanMax = (v) => {
-            const split = v.split(/[–—-]/);
+            const split = v.split(/[\-–—]/);
             if (split.length < 2) return clean(v);
             return parseFloat(split[1].trim().replace(/,/g, '').replace(/\+/g, ''));
         };
         const isMaintenanceRequired = (activeService === "Websites" || activeService === "Mobile Applications");
         
         currentSelectedFeatures = Object.keys(prod.modules);
-        
-        // Standardize dash formatting to "Min - Max"
         otLabel = prod.fixed.replace(/[–—]/g, '-');
         
         if(isMaintenanceRequired) {
@@ -677,18 +682,17 @@ function calculateTotal() {
 
     const featureChips = currentSelectedFeatures.length > 0 
         ? `<div class="mt-4 pt-3 border-t border-slate-800/50">
-             <span class="text-slate-500 text-[9px] uppercase font-black tracking-widest block mb-2">Included Features:</span>
-             <div class="flex flex-wrap gap-1.5">
-                ${currentSelectedFeatures.map(f => `<span class="bg-slate-800/60 text-slate-300 text-[9px] px-2 py-0.5 rounded-md border border-slate-700/50">${f}</span>`).join('')}
+             <span class="text-slate-500 text-[8px] uppercase font-black tracking-widest block mb-2">Included Features:</span>
+             <div class="flex flex-wrap gap-1">
+                ${currentSelectedFeatures.map(f => `<span class="bg-slate-800/60 text-slate-300 text-[8px] px-2 py-0.5 rounded-md border border-slate-700/50">${f}</span>`).join('')}
              </div>
            </div>` 
-        : (activeService === "Business Systems" ? `<p class="mt-3 text-[9px] text-sky-400 font-bold uppercase tracking-widest italic animate-pulse">Select 2+ features</p>` : '');
+        : (activeService === "Business Systems" ? `<p class="mt-3 text-[9px] text-sky-400 font-bold uppercase tracking-widest italic animate-pulse">Select modules</p>` : '');
 
     sumHtml = `
-        <div class="space-y-3">
-            <div class="flex justify-between text-[11px]"><span class="text-slate-400 uppercase tracking-tighter text-[9px] font-black">Category</span><span class="font-bold text-slate-100">${activeService}</span></div>
-            <div class="flex justify-between text-[11px]"><span class="text-slate-400 uppercase tracking-tighter text-[9px] font-black">Type</span><span class="font-bold text-slate-100">${activeType || 'Default'}</span></div>
-            <div class="flex justify-between text-[11px]"><span class="text-slate-400 uppercase tracking-tighter text-[9px] font-black">Tier</span><span class="font-bold text-slate-100">${prod.name}</span></div>
+        <div class="space-y-2">
+            <div class="flex justify-between text-[10px]"><span class="text-slate-400 uppercase tracking-tighter font-black">Category</span><span class="font-bold text-slate-100">${activeService}</span></div>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-400 uppercase tracking-tighter font-black">Tier</span><span class="font-bold text-slate-100">${prod.name}</span></div>
             ${featureChips}
         </div>`;
     elements.summaryItems.innerHTML = sumHtml;
@@ -703,7 +707,11 @@ window.scrollToSummary = () => {
 window.copyQuote = () => {
     const text = `MANTIQ BUSINESS SERVICES\nService: ${activeService}\nOne-time: ${elements.oneTimeEl.innerText} EGP\nQuarterly: ${elements.quarterlyEl.innerText} EGP`;
     navigator.clipboard.writeText(text);
-    const t = document.getElementById('toast'); t.style.opacity = '1'; setTimeout(() => t.style.opacity = '0', 2000);
+    const t = document.createElement('div');
+    t.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-sky-500 text-white px-6 py-3 rounded-full text-xs font-bold shadow-2xl z-[300]';
+    t.innerText = 'Quotation Copied';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
 };
 
 window.downloadQuoteAsPNG = () => {
@@ -711,7 +719,7 @@ window.downloadQuoteAsPNG = () => {
     document.getElementById('png-quarterly').innerText = elements.quarterlyEl.innerText;
     document.getElementById('png-summary-content').innerHTML = elements.summaryItems.innerHTML;
     html2canvas(document.getElementById('png-capture-template'), { backgroundColor: '#101828', scale: 2 }).then(canvas => {
-        const link = document.createElement('a'); link.download = 'MANTIQ-Quotation.png'; link.href = canvas.toDataURL(); link.click();
+        const link = document.createElement('a'); link.download = 'MANTIQ-Quote.png'; link.href = canvas.toDataURL(); link.click();
     });
 };
 
