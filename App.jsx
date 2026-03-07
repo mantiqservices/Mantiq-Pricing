@@ -3,7 +3,6 @@ import {
   ChevronDown, 
   Layout, 
   Smartphone, 
-  Briefcase, 
   Database, 
   Users, 
   Check, 
@@ -12,7 +11,6 @@ import {
   Send, 
   X,
   TrendingUp,
-  CreditCard,
   CheckCircle
 } from 'lucide-react';
 
@@ -106,7 +104,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxv09A4YstU_u6tg5o2k
 
 // --- CUSTOM DROPDOWN COMPONENT ---
 
-const Dropdown = ({ options, selected, onSelect, placeholder, disabled = false }) => {
+const CustomDropdown = ({ options, selected, onSelect, placeholder, disabled = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -124,7 +122,7 @@ const Dropdown = ({ options, selected, onSelect, placeholder, disabled = false }
     <div ref={containerRef} className={`relative w-full ${disabled ? 'opacity-40 pointer-events-none' : ''}`}>
       <div 
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center justify-between p-4 bg-white border-2 rounded-2xl cursor-pointer transition-all ${isOpen ? 'border-sky-500 ring-4 ring-sky-50' : 'border-slate-100 hover:border-slate-200'}`}
+        className={`flex items-center justify-between p-4 bg-white border-2 rounded-2xl cursor-pointer transition-all ${isOpen ? 'border-sky-500 ring-4 ring-sky-50 shadow-sm' : 'border-slate-100 hover:border-slate-200'}`}
       >
         <span className={`text-sm font-bold truncate ${selected ? 'text-slate-900' : 'text-slate-400'}`}>
           {selected ? selected : placeholder}
@@ -162,7 +160,6 @@ export default function App() {
 
   const pngTemplateRef = useRef(null);
 
-  // Load html2canvas via CDN to avoid bundler errors and apply global styles
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
@@ -170,13 +167,11 @@ export default function App() {
     script.onload = () => setHtml2canvasLoaded(true);
     document.head.appendChild(script);
 
-    // Disable right-click for security as per original HTML
     const handleContext = (e) => e.preventDefault();
     document.addEventListener('contextmenu', handleContext);
     return () => document.removeEventListener('contextmenu', handleContext);
   }, []);
 
-  // --- CALCULATIONS ---
   const { oneTime, quarterly, featuresList } = useMemo(() => {
     if (!service || !tier || (!type && service !== "Business Development")) {
       return { oneTime: "0", quarterly: "0", featuresList: [] };
@@ -233,7 +228,6 @@ export default function App() {
     return { oneTime: otVal, quarterly: qVal, featuresList: activeModules };
   }, [service, type, tier, selectedModules, users]);
 
-  // --- HANDLERS ---
   const handleServiceSelect = (val) => {
     setService(val);
     setType(null);
@@ -281,11 +275,15 @@ export default function App() {
 
   const exportPNG = async () => {
     if (!html2canvasLoaded || !window.html2canvas || !pngTemplateRef.current) return;
-    const canvas = await window.html2canvas(pngTemplateRef.current, { backgroundColor: '#101828', scale: 2 });
-    const link = document.createElement('a');
-    link.download = `MANTIQ-Quote-${Date.now()}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
+    try {
+      const canvas = await window.html2canvas(pngTemplateRef.current, { backgroundColor: '#101828', scale: 2 });
+      const link = document.createElement('a');
+      link.download = `MANTIQ-Quote-${Date.now()}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    } catch (e) {
+      console.error("Export failed", e);
+    }
   };
 
   const submitInquiry = async (e) => {
@@ -333,14 +331,13 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 px-4 md:px-8 lg:px-12 py-8 overflow-x-hidden" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       
-      {/* Original Font Import */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
       `}</style>
 
       {/* Fixed Mobile Bottom Total Bar */}
-      <div className="lg:hidden fixed bottom-4 left-4 right-4 bg-slate-900/98 backdrop-blur-xl border border-white/10 p-4 rounded-3xl z-[100] flex items-center justify-between shadow-2xl animate-in slide-in-from-bottom-10">
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 bg-slate-900/98 backdrop-blur-xl border border-white/10 p-4 rounded-3xl z-[100] flex items-center justify-between shadow-2xl">
         <div className="flex flex-col min-w-0 pr-2">
           <span className="text-[7px] text-slate-400 font-black tracking-widest uppercase mb-0.5">Estimated Total</span>
           <div className="text-white font-black text-lg truncate leading-none">
@@ -378,10 +375,8 @@ export default function App() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-20 md:mb-0">
           
-          {/* Main Configurator Area */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* 1. Category */}
             <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all hover:shadow-md">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
@@ -392,7 +387,7 @@ export default function App() {
                   <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Initial Selection</p>
                 </div>
               </div>
-              <Dropdown 
+              <CustomDropdown 
                 placeholder="-- Select Category --"
                 options={Object.keys(PRODUCT_DATA)}
                 selected={service}
@@ -400,7 +395,6 @@ export default function App() {
               />
             </section>
 
-            {/* 2. Project Focus (Dynamic) */}
             {service && service !== "Business Development" && (
               <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex items-center gap-3 mb-8">
@@ -412,7 +406,7 @@ export default function App() {
                     <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Industry Specifics</p>
                   </div>
                 </div>
-                <Dropdown 
+                <CustomDropdown 
                   placeholder="-- Select Focus --"
                   options={
                     service === "Business Systems" 
@@ -425,7 +419,6 @@ export default function App() {
               </section>
             )}
 
-            {/* 3. Tier Selection */}
             <section className={`bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 ${(!service || (!type && service !== "Business Development")) ? 'opacity-30 pointer-events-none grayscale' : ''}`}>
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
@@ -436,7 +429,7 @@ export default function App() {
                   <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Scale of Service</p>
                 </div>
               </div>
-              <Dropdown 
+              <CustomDropdown 
                 placeholder="-- Choose System Tier --"
                 options={service && (type || service === "Business Development") ? Object.keys(PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type] || {}).map(k => PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type][k].name) : []}
                 selected={currentTierName}
@@ -444,7 +437,6 @@ export default function App() {
               />
             </section>
 
-            {/* 4. Strategic Features Grid */}
             <section className={`bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 ${!tier ? 'opacity-30 pointer-events-none' : ''}`}>
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
@@ -471,7 +463,6 @@ export default function App() {
               </div>
             </section>
 
-            {/* 5. Users (Business Systems Only) */}
             {service === "Business Systems" && (
               <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in zoom-in-95 duration-500">
                 <div className="flex items-center gap-3 mb-8">
@@ -495,7 +486,6 @@ export default function App() {
 
           </div>
 
-          {/* Right Sidebar: Sticky Investment Summary */}
           <div className="lg:col-span-1" id="summary-card">
             <div className="bg-slate-900 text-white p-8 md:p-10 rounded-[3rem] sticky top-8 shadow-2xl border border-white/5 overflow-hidden">
               <div className="flex items-center gap-3 mb-10">
@@ -513,7 +503,7 @@ export default function App() {
                   <div className="space-y-5 animate-in fade-in duration-700">
                     <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest group">
                       <span className="text-slate-500">Category</span>
-                      <span className="text-slate-200">{service}</span>
+                      <span className="text-slate-200 text-right ml-2">{service}</span>
                     </div>
                     <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest border-t border-white/5 pt-5">
                       <span className="text-slate-500">Selected Tier</span>
@@ -571,7 +561,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* LEAD CAPTURE MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" onClick={() => setIsModalOpen(false)} />
