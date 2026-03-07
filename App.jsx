@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 
-// --- INLINE SVG ICONS (Replacing lucide-react to ensure 0% load failure) ---
+// --- INLINE SVG ICONS ---
+// Using SVGs directly ensures the app loads fast and never fails due to missing icon libraries.
 const Icons = {
   ChevronDown: ({ size = 20, className = "" }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m6 9 6 6 6-6"/></svg>
@@ -40,7 +41,7 @@ const Icons = {
   )
 };
 
-// --- DATA STRUCTURE ---
+// --- PRICING DATA ---
 const PRODUCT_DATA = {
   "Business Systems": {
     "Company Profile or Services": {
@@ -128,7 +129,7 @@ const PRODUCT_DATA = {
 
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxv09A4YstU_u6tg5o2kyITwe42AAJg0d2bEVn7GEzdeOvbth4PdBq0mCWjSeVry3Vymw/exec';
 
-// --- CUSTOM DROPDOWN COMPONENT ---
+// --- CUSTOM DROPDOWN ---
 
 const CustomDropdown = ({ options, selected, onSelect, placeholder, disabled = false }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -182,15 +183,21 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [html2canvasLoaded, setHtml2canvasLoaded] = useState(false);
+  const [html2canvasStatus, setHtml2canvasStatus] = useState('loading');
 
   const pngTemplateRef = useRef(null);
 
+  // SAFE LOADING: Dynamically load html2canvas to prevent Vercel "Could not resolve" errors
   useEffect(() => {
+    if (window.html2canvas) {
+      setHtml2canvasStatus('ready');
+      return;
+    }
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
     script.async = true;
-    script.onload = () => setHtml2canvasLoaded(true);
+    script.onload = () => setHtml2canvasStatus('ready');
+    script.onerror = () => setHtml2canvasStatus('error');
     document.head.appendChild(script);
 
     const handleContext = (e) => e.preventDefault();
@@ -300,7 +307,7 @@ export default function App() {
   };
 
   const exportPNG = async () => {
-    if (!html2canvasLoaded || !window.html2canvas || !pngTemplateRef.current) return;
+    if (html2canvasStatus !== 'ready' || !window.html2canvas || !pngTemplateRef.current) return;
     try {
       const canvas = await window.html2canvas(pngTemplateRef.current, { backgroundColor: '#101828', scale: 2 });
       const link = document.createElement('a');
@@ -362,7 +369,7 @@ export default function App() {
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
       `}</style>
 
-      {/* Fixed Mobile Bottom Total Bar */}
+      {/* MOBILE TOTAL BAR */}
       <div className="lg:hidden fixed bottom-4 left-4 right-4 bg-slate-900/98 backdrop-blur-xl border border-white/10 p-4 rounded-3xl z-[100] flex items-center justify-between shadow-2xl">
         <div className="flex flex-col min-w-0 pr-2">
           <span className="text-[7px] text-slate-400 font-black tracking-widest uppercase mb-0.5">Estimated Total</span>
@@ -402,7 +409,6 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-20 md:mb-0">
           
           <div className="lg:col-span-2 space-y-8">
-            
             <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all hover:shadow-md">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
@@ -410,15 +416,9 @@ export default function App() {
                 </div>
                 <div>
                   <h3 className="font-black text-slate-800 leading-none">Service Category</h3>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Initial Selection</p>
                 </div>
               </div>
-              <CustomDropdown 
-                placeholder="-- Select Category --"
-                options={Object.keys(PRODUCT_DATA)}
-                selected={service}
-                onSelect={handleServiceSelect}
-              />
+              <CustomDropdown placeholder="-- Select Category --" options={Object.keys(PRODUCT_DATA)} selected={service} onSelect={handleServiceSelect} />
             </section>
 
             {service && service !== "Business Development" && (
@@ -427,21 +427,9 @@ export default function App() {
                   <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
                     <Icons.Smartphone size={20} />
                   </div>
-                  <div>
-                    <h3 className="font-black text-slate-800 leading-none">Project Focus</h3>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Industry Specifics</p>
-                  </div>
+                  <h3 className="font-black text-slate-800 leading-none">Project Focus</h3>
                 </div>
-                <CustomDropdown 
-                  placeholder="-- Select Focus --"
-                  options={
-                    service === "Business Systems" 
-                    ? ["Online Store", "Start-up Company", "Corporate"] 
-                    : ["Company Profile or Services", "E-Commerce"]
-                  }
-                  selected={type}
-                  onSelect={handleTypeSelect}
-                />
+                <CustomDropdown placeholder="-- Select Focus --" options={service === "Business Systems" ? ["Online Store", "Start-up Company", "Corporate"] : ["Company Profile or Services", "E-Commerce"]} selected={type} onSelect={handleTypeSelect} />
               </section>
             )}
 
@@ -450,17 +438,9 @@ export default function App() {
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
                   <Icons.Database size={20} />
                 </div>
-                <div>
-                  <h3 className="font-black text-slate-800 leading-none">Package Tier</h3>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Scale of Service</p>
-                </div>
+                <h3 className="font-black text-slate-800 leading-none">Package Tier</h3>
               </div>
-              <CustomDropdown 
-                placeholder="-- Choose System Tier --"
-                options={service && (type || service === "Business Development") ? Object.keys(PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type] || {}).map(k => PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type][k].name) : []}
-                selected={currentTierName}
-                onSelect={handleTierSelect}
-              />
+              <CustomDropdown placeholder="-- Choose Tier --" options={service && (type || service === "Business Development") ? Object.keys(PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type] || {}).map(k => PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type][k].name) : []} selected={currentTierName} onSelect={handleTierSelect} />
             </section>
 
             <section className={`bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 ${!tier ? 'opacity-30 pointer-events-none' : ''}`}>
@@ -468,10 +448,7 @@ export default function App() {
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
                   <Icons.CheckCircle size={20} />
                 </div>
-                <div>
-                  <h3 className="font-black text-slate-800 leading-none">Strategic Features</h3>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Module Customization</p>
-                </div>
+                <h3 className="font-black text-slate-800 leading-none">Strategic Features</h3>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {tier && Object.keys(PRODUCT_DATA[service][service === "Business Systems" || service === "Business Development" ? "Company Profile or Services" : type][tier]?.modules || {}).map((mod, i) => (
@@ -480,7 +457,7 @@ export default function App() {
                     onClick={() => service === "Business Systems" && toggleModule(mod)}
                     className={`p-3 rounded-2xl text-[9px] font-black uppercase tracking-widest border transition-all h-20 flex items-center justify-center text-center
                       ${service === "Business Systems" 
-                        ? (selectedModules.includes(mod) ? 'bg-sky-500 border-sky-500 text-white shadow-lg active:scale-95' : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300 active:scale-95') 
+                        ? (selectedModules.includes(mod) ? 'bg-sky-500 border-sky-500 text-white shadow-lg' : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300') 
                         : 'bg-sky-50 border-sky-100 text-sky-600 pointer-events-none'}`}
                   >
                     {service !== "Business Systems" && <Icons.Check size={12} className="mr-1 inline" />} {mod}
@@ -495,10 +472,7 @@ export default function App() {
                   <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
                     <Icons.Users size={20} />
                   </div>
-                  <div>
-                    <h3 className="font-black text-slate-800 leading-none">System Users</h3>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-widest">Active Licenses</p>
-                  </div>
+                  <h3 className="font-black text-slate-800 leading-none">System Users</h3>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex-1 bg-slate-50 border-2 border-slate-100 rounded-2xl p-3 flex items-center justify-between">
@@ -509,9 +483,9 @@ export default function App() {
                 </div>
               </section>
             )}
-
           </div>
 
+          {/* SUMMARY SIDEBAR */}
           <div className="lg:col-span-1" id="summary-card">
             <div className="bg-slate-900 text-white p-8 md:p-10 rounded-[3rem] sticky top-8 shadow-2xl border border-white/5 overflow-hidden">
               <div className="flex items-center gap-3 mb-10">
@@ -539,9 +513,7 @@ export default function App() {
                       <span className="text-slate-500 text-[9px] uppercase font-black tracking-widest block mb-4">Implementation Scope:</span>
                       <div className="flex flex-wrap gap-1.5">
                         {featuresList.map((f, idx) => (
-                          <span key={idx} className="bg-slate-800 text-slate-300 text-[8px] px-2.5 py-1 rounded-md border border-white/10 uppercase font-black tracking-tighter">
-                            {f}
-                          </span>
+                          <span key={idx} className="bg-slate-800 text-slate-300 text-[8px] px-2.5 py-1 rounded-md border border-white/10 uppercase font-black tracking-tighter">{f}</span>
                         ))}
                       </div>
                     </div>
@@ -565,18 +537,14 @@ export default function App() {
                 </div>
 
                 <div className="pt-6 space-y-3">
-                  <button 
-                    disabled={!tier}
-                    onClick={() => setIsModalOpen(true)}
-                    className="w-full bg-white text-slate-900 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-sky-50 active:scale-95 transition-all"
-                  >
+                  <button disabled={!tier} onClick={() => setIsModalOpen(true)} className="w-full bg-white text-slate-900 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-sky-50 active:scale-95 transition-all">
                     <Icons.Send size={16} /> Send Inquiry
                   </button>
                   <div className="grid grid-cols-2 gap-3">
-                    <button onClick={copyToClipboard} className="bg-slate-800/50 text-slate-400 py-4 rounded-xl text-[9px] uppercase font-black tracking-widest border border-white/5 hover:text-white transition-colors active:bg-slate-800">
+                    <button onClick={copyToClipboard} className="bg-slate-800/50 text-slate-400 py-4 rounded-xl text-[9px] uppercase font-black tracking-widest border border-white/5">
                       <Icons.Copy size={12} className="inline mr-1" /> Copy
                     </button>
-                    <button onClick={exportPNG} className="bg-slate-800/50 text-slate-400 py-4 rounded-xl text-[9px] uppercase font-black tracking-widest border border-white/5 hover:text-white transition-colors active:bg-slate-800">
+                    <button onClick={exportPNG} className="bg-slate-800/50 text-slate-400 py-4 rounded-xl text-[9px] uppercase font-black tracking-widest border border-white/5">
                       <Icons.Download size={12} className="inline mr-1" /> PNG
                     </button>
                   </div>
@@ -587,6 +555,7 @@ export default function App() {
         </div>
       </div>
 
+      {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" onClick={() => setIsModalOpen(false)} />
@@ -594,7 +563,6 @@ export default function App() {
             <button onClick={() => setIsModalOpen(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-600 transition-colors">
               <Icons.X size={24} />
             </button>
-            
             {!isSubmitted ? (
               <>
                 <div className="mb-10">
@@ -603,22 +571,19 @@ export default function App() {
                 </div>
                 <form onSubmit={submitInquiry} className="space-y-5">
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Client Name</label>
-                    <input name="name" required placeholder="Full Name" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 font-bold transition-all" />
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Name</label>
+                    <input name="name" required placeholder="Full Name" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 font-bold" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
-                    <input name="phone" required type="tel" placeholder="+20..." className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 font-bold transition-all" />
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone</label>
+                    <input name="phone" required type="tel" placeholder="+20..." className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 font-bold" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Work Email</label>
-                    <input name="email" required type="email" placeholder="email@company.com" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 font-bold transition-all" />
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                    <input name="email" required type="email" placeholder="email@company.com" className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-sky-500 font-bold" />
                   </div>
-                  <button 
-                    disabled={isSubmitting}
-                    className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl hover:bg-slate-800 active:scale-[0.98] transition-all mt-6"
-                  >
-                    {isSubmitting ? 'Transmitting...' : 'Submit Now'}
+                  <button disabled={isSubmitting} className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.3em] shadow-xl hover:bg-slate-800 active:scale-[0.98] transition-all mt-6">
+                    {isSubmitting ? 'Sending...' : 'Submit Now'}
                   </button>
                 </form>
               </>
@@ -627,16 +592,16 @@ export default function App() {
                 <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
                   <Icons.CheckCircle size={48} strokeWidth={2.5} />
                 </div>
-                <h4 className="text-3xl font-black text-slate-900 tracking-tighter">Transmission Successful</h4>
-                <p className="text-slate-500 mt-4 font-medium leading-relaxed">Your project configuration has been saved. Our technical strategy team will contact you shortly.</p>
-                <button onClick={() => setIsModalOpen(false)} className="mt-10 px-8 py-3 bg-slate-100 text-slate-900 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl hover:bg-slate-200 transition-colors">Done</button>
+                <h4 className="text-3xl font-black text-slate-900 tracking-tighter">Request Received</h4>
+                <p className="text-slate-500 mt-4 font-medium leading-relaxed">Our strategy team will contact you shortly.</p>
+                <button onClick={() => setIsModalOpen(false)} className="mt-10 px-8 py-3 bg-slate-100 text-slate-900 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl">Done</button>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {/* HIDDEN PNG CAPTURE TEMPLATE */}
+      {/* HIDDEN EXPORT TEMPLATE */}
       <div ref={pngTemplateRef} className="p-16 text-white bg-slate-950 w-[800px] absolute -left-[9999px]">
         <div className="mb-14 flex justify-between items-start">
           <div>
@@ -648,57 +613,33 @@ export default function App() {
             <div className="text-xs font-bold">{new Date().toLocaleDateString('en-GB')}</div>
           </div>
         </div>
-
         <div className="space-y-8 mb-16">
           <div className="grid grid-cols-2 gap-10">
-            <div>
-              <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-3">Service Category</div>
-              <div className="text-xl font-black text-white">{service}</div>
-            </div>
-            <div>
-              <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-3">System Tier</div>
-              <div className="text-xl font-black text-sky-400 leading-tight">{currentTierName}</div>
-            </div>
+            <div><div className="text-slate-600 uppercase text-[10px] font-black">Service</div><div className="text-xl font-black text-white">{service}</div></div>
+            <div><div className="text-slate-600 uppercase text-[10px] font-black">Tier</div><div className="text-xl font-black text-sky-400">{currentTierName}</div></div>
           </div>
-
           <div className="border-t border-white/5 pt-10">
-            <span className="text-slate-600 text-[10px] uppercase font-black tracking-[0.2em] mb-5 block">Implementation Scope & Modules:</span>
+            <span className="text-slate-600 text-[10px] uppercase font-black tracking-[0.2em] mb-5 block">Implementation Scope:</span>
             <div className="flex flex-wrap gap-2.5">
               {featuresList.map((f, i) => (
-                <span key={i} className="bg-slate-900 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase text-slate-200 tracking-tight">
-                  {f}
-                </span>
+                <span key={i} className="bg-slate-900 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase text-slate-200">{f}</span>
               ))}
             </div>
           </div>
         </div>
-
-        <div className="border-t border-white/5 pt-16 space-y-10">
+        <div className="border-t border-white/5 pt-16">
           <div className="bg-white/5 p-12 rounded-[4rem] border border-white/10 flex items-center justify-between">
             <div>
               <span className="text-sky-400 text-[10px] font-black uppercase tracking-[0.5em] block mb-4">Total One-Time Investment</span>
-              <div className="text-6xl font-black flex items-baseline gap-2">
-                {oneTime} <span className="text-xl opacity-20 font-bold uppercase tracking-widest">EGP</span>
-              </div>
+              <div className="text-6xl font-black">{oneTime} <span className="text-xl opacity-20">EGP</span></div>
             </div>
             <div className="text-right border-l border-white/10 pl-12">
                <span className="text-slate-500 text-[10px] font-black uppercase tracking-[0.5em] block mb-4">Quarterly Service</span>
-               <div className="text-3xl font-black text-slate-200 flex items-baseline gap-2 justify-end">
-                {quarterly} <span className="text-sm opacity-20 font-bold uppercase tracking-widest">EGP</span>
-              </div>
+               <div className="text-3xl font-black text-slate-200">{quarterly} <span className="text-sm opacity-20">EGP</span></div>
             </div>
           </div>
         </div>
-
-        <div className="mt-20 flex justify-between items-center text-[10px] text-slate-700 font-black uppercase tracking-widest">
-          <div>© {new Date().getFullYear()} MANTIQ BUSINESS SERVICES</div>
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-sky-500 rounded-full" />
-            Official Quotation Configurator
-          </div>
-        </div>
       </div>
-
     </div>
   );
 }
