@@ -1,18 +1,44 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { 
-  ChevronDown, 
-  Layout, 
-  Smartphone, 
-  Database, 
-  Users, 
-  Check, 
-  Copy, 
-  Download, 
-  Send, 
-  X,
-  TrendingUp,
-  CheckCircle
-} from 'lucide-react';
+
+// --- INLINE SVG ICONS (Replacing lucide-react to ensure 0% load failure) ---
+const Icons = {
+  ChevronDown: ({ size = 20, className = "" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m6 9 6 6 6-6"/></svg>
+  ),
+  Layout: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+  ),
+  Smartphone: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+  ),
+  Database: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+  ),
+  Users: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  ),
+  Check: ({ size = 20, className = "" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 6 9 17l-5-5"/></svg>
+  ),
+  Copy: ({ size = 20, className = "" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+  ),
+  Download: ({ size = 20, className = "" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+  ),
+  Send: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+  ),
+  X: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  ),
+  TrendingUp: ({ size = 20, className = "" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+  ),
+  CheckCircle: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+  )
+};
 
 // --- DATA STRUCTURE ---
 const PRODUCT_DATA = {
@@ -127,7 +153,7 @@ const CustomDropdown = ({ options, selected, onSelect, placeholder, disabled = f
         <span className={`text-sm font-bold truncate ${selected ? 'text-slate-900' : 'text-slate-400'}`}>
           {selected ? selected : placeholder}
         </span>
-        <ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <Icons.ChevronDown size={18} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </div>
       
       {isOpen && (
@@ -349,7 +375,7 @@ export default function App() {
             onClick={() => document.getElementById('summary-card').scrollIntoView({ behavior: 'smooth' })}
             className="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-white active:scale-95 transition-transform"
           >
-            <ChevronDown size={20} />
+            <Icons.ChevronDown size={20} />
           </button>
           <button 
             disabled={!tier}
@@ -380,7 +406,7 @@ export default function App() {
             <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all hover:shadow-md">
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
-                  <Layout size={20} />
+                  <Icons.Layout size={20} />
                 </div>
                 <div>
                   <h3 className="font-black text-slate-800 leading-none">Service Category</h3>
@@ -399,7 +425,7 @@ export default function App() {
               <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
-                    <Smartphone size={20} />
+                    <Icons.Smartphone size={20} />
                   </div>
                   <div>
                     <h3 className="font-black text-slate-800 leading-none">Project Focus</h3>
@@ -422,7 +448,7 @@ export default function App() {
             <section className={`bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 ${(!service || (!type && service !== "Business Development")) ? 'opacity-30 pointer-events-none grayscale' : ''}`}>
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
-                  <Database size={20} />
+                  <Icons.Database size={20} />
                 </div>
                 <div>
                   <h3 className="font-black text-slate-800 leading-none">Package Tier</h3>
@@ -440,7 +466,7 @@ export default function App() {
             <section className={`bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 ${!tier ? 'opacity-30 pointer-events-none' : ''}`}>
               <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
-                  <CheckCircle size={20} />
+                  <Icons.CheckCircle size={20} />
                 </div>
                 <div>
                   <h3 className="font-black text-slate-800 leading-none">Strategic Features</h3>
@@ -457,7 +483,7 @@ export default function App() {
                         ? (selectedModules.includes(mod) ? 'bg-sky-500 border-sky-500 text-white shadow-lg active:scale-95' : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300 active:scale-95') 
                         : 'bg-sky-50 border-sky-100 text-sky-600 pointer-events-none'}`}
                   >
-                    {service !== "Business Systems" && <Check size={12} className="mr-1 inline" />} {mod}
+                    {service !== "Business Systems" && <Icons.Check size={12} className="mr-1 inline" />} {mod}
                   </button>
                 ))}
               </div>
@@ -467,7 +493,7 @@ export default function App() {
               <section className="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm animate-in zoom-in-95 duration-500">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-sky-50 text-sky-500 rounded-2xl">
-                    <Users size={20} />
+                    <Icons.Users size={20} />
                   </div>
                   <div>
                     <h3 className="font-black text-slate-800 leading-none">System Users</h3>
@@ -496,7 +522,7 @@ export default function App() {
               <div className="space-y-6 mb-12 min-h-[120px]">
                 {!tier ? (
                   <div className="flex flex-col items-center justify-center py-10 opacity-30">
-                    <TrendingUp size={32} className="mb-4" />
+                    <Icons.TrendingUp size={32} className="mb-4" />
                     <p className="text-center text-[10px] font-black uppercase tracking-[0.2em]">Awaiting selection</p>
                   </div>
                 ) : (
@@ -544,14 +570,14 @@ export default function App() {
                     onClick={() => setIsModalOpen(true)}
                     className="w-full bg-white text-slate-900 py-5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 shadow-xl hover:bg-sky-50 active:scale-95 transition-all"
                   >
-                    <Send size={16} /> Send Inquiry
+                    <Icons.Send size={16} /> Send Inquiry
                   </button>
                   <div className="grid grid-cols-2 gap-3">
                     <button onClick={copyToClipboard} className="bg-slate-800/50 text-slate-400 py-4 rounded-xl text-[9px] uppercase font-black tracking-widest border border-white/5 hover:text-white transition-colors active:bg-slate-800">
-                      <Copy size={12} className="inline mr-1" /> Copy
+                      <Icons.Copy size={12} className="inline mr-1" /> Copy
                     </button>
                     <button onClick={exportPNG} className="bg-slate-800/50 text-slate-400 py-4 rounded-xl text-[9px] uppercase font-black tracking-widest border border-white/5 hover:text-white transition-colors active:bg-slate-800">
-                      <Download size={12} className="inline mr-1" /> PNG
+                      <Icons.Download size={12} className="inline mr-1" /> PNG
                     </button>
                   </div>
                 </div>
@@ -566,7 +592,7 @@ export default function App() {
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xl" onClick={() => setIsModalOpen(false)} />
           <div className="relative bg-white w-full max-w-md p-10 rounded-[3rem] shadow-2xl animate-in zoom-in-95 duration-300 overflow-hidden">
             <button onClick={() => setIsModalOpen(false)} className="absolute top-10 right-10 text-slate-300 hover:text-slate-600 transition-colors">
-              <X size={24} />
+              <Icons.X size={24} />
             </button>
             
             {!isSubmitted ? (
@@ -599,7 +625,7 @@ export default function App() {
             ) : (
               <div className="text-center py-10 animate-in zoom-in-90 duration-500">
                 <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                  <CheckCircle size={48} strokeWidth={2.5} />
+                  <Icons.CheckCircle size={48} strokeWidth={2.5} />
                 </div>
                 <h4 className="text-3xl font-black text-slate-900 tracking-tighter">Transmission Successful</h4>
                 <p className="text-slate-500 mt-4 font-medium leading-relaxed">Your project configuration has been saved. Our technical strategy team will contact you shortly.</p>
